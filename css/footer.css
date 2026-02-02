@@ -1,0 +1,27 @@
+/* 小鱼容器样式 - 核心布局 */
+#jsi-flying-fish-container {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    z-index: -1 !important;
+    width: 100% !important;
+    height: 200px !important;
+    pointer-events: none !important;
+    filter: grayscale(100%);
+    opacity: 0.35;
+    mix-blend-mode: screen;
+}
+
+/* 解决页脚布局问题 */
+#footer {
+    background: transparent !important;
+}
+
+.footer-copyright {
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7) !important;
+}
+
+.footer-copyright a {
+    color: #69c0ff !important; /* 更亮的蓝色 */
+    font-weight: 500 !important;
+}
