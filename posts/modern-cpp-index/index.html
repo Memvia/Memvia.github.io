@@ -1,0 +1,683 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>现代 C++ 编程语言 - 系列索引 | Memvia's Blog</title><meta name="author" content="Memvia"><meta name="copyright" content="Memvia"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#EFCCC8"><meta name="description" content="现代 C++ 编程语言系统性学习系列文章的完整索引和学习路线图">
+<meta property="og:type" content="article">
+<meta property="og:title" content="现代 C++ 编程语言 - 系列索引">
+<meta property="og:url" content="https://memvia.github.io/posts/modern-cpp-index/index.html">
+<meta property="og:site_name" content="Memvia&#39;s Blog">
+<meta property="og:description" content="现代 C++ 编程语言系统性学习系列文章的完整索引和学习路线图">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.mituw.com/imgs/2026/02/07/423c193cd50787d4.png">
+<meta property="article:published_time" content="2026-02-09T00:00:00.000Z">
+<meta property="article:modified_time" content="2026-02-09T00:00:00.000Z">
+<meta property="article:author" content="Memvia">
+<meta property="article:tag" content="现代C++">
+<meta property="article:tag" content="系列索引">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.mituw.com/imgs/2026/02/07/423c193cd50787d4.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "现代 C++ 编程语言 - 系列索引",
+  "url": "https://memvia.github.io/posts/modern-cpp-index/",
+  "image": "https://i.mituw.com/imgs/2026/02/07/423c193cd50787d4.png",
+  "datePublished": "2026-02-09T00:00:00.000Z",
+  "dateModified": "2026-02-09T00:00:00.000Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Memvia",
+      "url": "https://Memvia.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="https://memvia.github.io/posts/modern-cpp-index/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.3"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#1C1A24')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#EFCCC8')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":"ture","top_n_per_article":1,"unescape":false,"pagination":{"enable":true,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":true,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":150,"languages":{"author":"作者: Memvia","link":"链接: ","source":"来源: Memvia's Blog","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#9583DE","bgDark":"#1f1f1f","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '现代 C++ 编程语言 - 系列索引',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/background.css"></script><link rel="stylesheet" href="/css/transparent.css"></script><link rel="stylesheet" href="/css/footer.css"></script><!-- hexo injector head_end start --><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiperstyle.css" media="print" onload="this.media='all'"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      if ($loadingBox.classList.contains('loaded')) return
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+
+  if (document.readyState === 'complete') {
+    preloader.endLoading()
+  } else {
+    window.addEventListener('load', preloader.endLoading)
+    document.addEventListener('DOMContentLoaded', preloader.endLoading)
+    // Add timeout protection: force end after 7 seconds
+    setTimeout(preloader.endLoading, 7000)
+  }
+
+  if (true) {
+    btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+    btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+  }
+})()</script><div class="bg-animation" id="web_bg"></div><script>(() => {
+  const arr = ["background-image: url(https://i.mituw.com/imgs/2026/02/07/7154507bc224f39f.png);","background-image: url(https://i.mituw.com/imgs/2026/02/07/11fc03b4d7b5e3d9.png);","background-image: url(https://i.mituw.com/imgs/2026/02/07/37975c46c7a3817c.png);"]
+  const webBgDiv = document.getElementById('web_bg')
+
+  const setRandomBg = () => {
+    webBgDiv.style = arr[Math.floor(Math.random() * arr.length)]
+    requestAnimationFrame(() => webBgDiv.classList.add('bg-animation'))
+  }
+
+  document.addEventListener('pjax:send', () => {
+    webBgDiv.style = ''
+    webBgDiv.classList.remove('bg-animation')
+  })
+
+  document.addEventListener('pjax:complete', setRandomBg)
+  document.addEventListener('DOMContentLoaded', setRandomBg)
+})()
+</script><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">9</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">20</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">14</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/comments/"><i class="fa-fw fas fa-comments"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://i.mituw.com/imgs/2026/02/07/423c193cd50787d4.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/nav_logo.png" alt="Logo"><span class="site-name">Memvia's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">现代 C++ 编程语言 - 系列索引</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/comments/"><i class="fa-fw fas fa-comments"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">现代 C++ 编程语言 - 系列索引</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-02-09T00:00:00.000Z" title="发表于 2026-02-09 00:00:00">2026-02-09</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-02-09T00:00:00.000Z" title="更新于 2026-02-09 00:00:00">2026-02-09</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%8E%B0%E4%BB%A3C-%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">现代C++编程语言</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%8E%B0%E4%BB%A3C-%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/%E7%B3%BB%E5%88%97%E7%B4%A2%E5%BC%95/">系列索引</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">1.5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>4分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><div id="post-outdate-notice" data="{&quot;limitDay&quot;:365,&quot;messagePrev&quot;:&quot;本文最后更新于&quot;,&quot;messageNext&quot;:&quot;天前，部分内容可能已失效&quot;,&quot;postUpdate&quot;:&quot;2026-02-09 00:00:00&quot;}" hidden></div><h1 id="现代-C-编程语言-系列索引"><a href="#现代-C-编程语言-系列索引" class="headerlink" title="现代 C++ 编程语言 - 系列索引"></a>现代 C++ 编程语言 - 系列索引</h1><blockquote>
+<p>绘学识为光，赴无明之渊；照见行路，不照归处。</p>
+</blockquote>
+<p>本系列旨在系统性地学习现代 C++（C++11&#x2F;14&#x2F;17&#x2F;20&#x2F;23）编程语言，将零散的知识点串联成完整的知识体系。</p>
+<h2 id="学习路线图"><a href="#学习路线图" class="headerlink" title="学习路线图"></a>学习路线图</h2><p>本系列采用四层架构设计，从基础到高级，逐步深入：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">graph TD</span><br><span class="line">    L4[第四层：抽象与范式&lt;br/&gt;过程化编程 • OOP • 泛型编程&lt;br/&gt;函数式编程 • 元编程 • 并发编程 • 混合范式]</span><br><span class="line">    L3[第三层：内存与抽象模型&lt;br/&gt;内存模型 • 内存管理 • 指针和引用&lt;br/&gt;资源管理 • 低级操作]</span><br><span class="line">    L2[第二层：标准库与生态系统&lt;br/&gt;容器 • 迭代器 • 算法 • 函数对象&lt;br/&gt;字符串 • 智能指针 • 并发 • 生态系统]</span><br><span class="line">    L1[第一层：核心语言特性&lt;br/&gt;基本语法 • 函数 • OOP • 模板&lt;br/&gt;异常 • 名字空间 • 其他语言特性]</span><br><span class="line">    Idioms[跨层模块：惯用法&lt;br/&gt;RAII • PIMPL • CRTP • SFINAE&lt;br/&gt;Copy-and-Swap • Rule of Five&lt;br/&gt;完美转发 • 其他惯用法]</span><br><span class="line"></span><br><span class="line">    L4 --&gt; L3</span><br><span class="line">    L3 --&gt; L2</span><br><span class="line">    L2 --&gt; L1</span><br><span class="line">    L4 -.-&gt; Idioms</span><br><span class="line">    L3 -.-&gt; Idioms</span><br><span class="line">    L2 -.-&gt; Idioms</span><br><span class="line">    L1 -.-&gt; Idioms</span><br><span class="line"></span><br><span class="line">    style L4 fill:#e1f5ff</span><br><span class="line">    style L3 fill:#fff4e1</span><br><span class="line">    style L2 fill:#e8f5e9</span><br><span class="line">    style L1 fill:#fce4ec</span><br><span class="line">    style Idioms fill:#f3e5f5</span><br></pre></td></tr></table></figure>
+
+<h2 id="跨层模块：惯用法"><a href="#跨层模块：惯用法" class="headerlink" title="跨层模块：惯用法"></a>跨层模块：惯用法</h2><p>惯用法是连接各层次的桥梁，是经验性的最佳实践，贯穿整个学习过程。</p>
+<hr>
+<h2 id="第一层：核心语言特性"><a href="#第一层：核心语言特性" class="headerlink" title="第一层：核心语言特性"></a>第一层：核心语言特性</h2><h3 id="基本语法和语义"><a href="#基本语法和语义" class="headerlink" title="基本语法和语义"></a>基本语法和语义</h3><ul>
+<li><input disabled="" type="checkbox"> 类型系统<ul>
+<li><input disabled="" type="checkbox"> 内置类型</li>
+<li><input disabled="" type="checkbox"> 复合类型</li>
+<li><input disabled="" type="checkbox"> 类型别名</li>
+<li><input disabled="" type="checkbox"> 类型推导</li>
+</ul>
+</li>
+<li><input disabled="" type="checkbox"> 变量和常量</li>
+<li><input disabled="" type="checkbox"> 作用域和生命周期</li>
+<li><input disabled="" type="checkbox"> 运算符和表达式</li>
+<li><input disabled="" type="checkbox"> 控制流</li>
+<li><input disabled="" type="checkbox"> 结构化绑定</li>
+<li><input disabled="" type="checkbox"> 初始化列表</li>
+</ul>
+<h3 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h3><ul>
+<li><input disabled="" type="checkbox"> 函数声明和定义</li>
+<li><input disabled="" type="checkbox"> 参数传递</li>
+<li><input disabled="" type="checkbox"> 函数重载</li>
+<li><input disabled="" type="checkbox"> 内联函数</li>
+<li><input disabled="" type="checkbox"> 函数对象和 lambda 表达式</li>
+<li><input disabled="" type="checkbox"> 返回类型后置语法</li>
+</ul>
+<h3 id="面向对象编程"><a href="#面向对象编程" class="headerlink" title="面向对象编程"></a>面向对象编程</h3><ul>
+<li><input disabled="" type="checkbox"> 类和对象</li>
+<li><input disabled="" type="checkbox"> 继承</li>
+<li><input disabled="" type="checkbox"> 多态</li>
+<li><input disabled="" type="checkbox"> 访问控制</li>
+<li><input disabled="" type="checkbox"> 构造函数和析构函数</li>
+<li><input disabled="" type="checkbox"> 拷贝控制<ul>
+<li><input disabled="" type="checkbox"> 拷贝构造</li>
+<li><input disabled="" type="checkbox"> 拷贝赋值</li>
+<li><input disabled="" type="checkbox"> 移动构造</li>
+<li><input disabled="" type="checkbox"> 移动赋值</li>
+</ul>
+</li>
+<li><input disabled="" type="checkbox"> 友元</li>
+</ul>
+<h3 id="模板和泛型编程"><a href="#模板和泛型编程" class="headerlink" title="模板和泛型编程"></a>模板和泛型编程</h3><ul>
+<li><input disabled="" type="checkbox"> 函数模板</li>
+<li><input disabled="" type="checkbox"> 类模板</li>
+<li><input disabled="" type="checkbox"> 模板特化</li>
+<li><input disabled="" type="checkbox"> 变参模板</li>
+<li><input disabled="" type="checkbox"> 模板元编程</li>
+</ul>
+<h3 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h3><ul>
+<li><input disabled="" type="checkbox"> throw, try, catch</li>
+<li><input disabled="" type="checkbox"> 异常安全</li>
+</ul>
+<h3 id="名字空间"><a href="#名字空间" class="headerlink" title="名字空间"></a>名字空间</h3><ul>
+<li><input disabled="" type="checkbox"> 名字空间的定义和使用</li>
+<li><input disabled="" type="checkbox"> 内联名字空间</li>
+<li><input disabled="" type="checkbox"> 名字空间别名</li>
+</ul>
+<h3 id="预处理和编译"><a href="#预处理和编译" class="headerlink" title="预处理和编译"></a>预处理和编译</h3><ul>
+<li><input disabled="" type="checkbox"> 宏</li>
+<li><input disabled="" type="checkbox"> 条件编译</li>
+<li><input disabled="" type="checkbox"> 编译指示</li>
+</ul>
+<h3 id="其他语言特性"><a href="#其他语言特性" class="headerlink" title="其他语言特性"></a>其他语言特性</h3><ul>
+<li><input disabled="" type="checkbox"> 属性</li>
+<li><input disabled="" type="checkbox"> 用户定义字面量</li>
+<li><input disabled="" type="checkbox"> 对齐控制</li>
+<li><input disabled="" type="checkbox"> 静态断言</li>
+<li><input disabled="" type="checkbox"> noexcept</li>
+<li><input disabled="" type="checkbox"> constexpr 和 consteval</li>
+<li><input disabled="" type="checkbox"> 范围 for 循环</li>
+</ul>
+<hr>
+<h2 id="第二层：标准库与生态系统"><a href="#第二层：标准库与生态系统" class="headerlink" title="第二层：标准库与生态系统"></a>第二层：标准库与生态系统</h2><h3 id="容器"><a href="#容器" class="headerlink" title="容器"></a>容器</h3><ul>
+<li><input disabled="" type="checkbox"> 序列容器</li>
+<li><input disabled="" type="checkbox"> 关联容器</li>
+<li><input disabled="" type="checkbox"> 无序容器</li>
+<li><input disabled="" type="checkbox"> 容器适配器</li>
+<li><input disabled="" type="checkbox"> 异构容器</li>
+</ul>
+<h3 id="迭代器"><a href="#迭代器" class="headerlink" title="迭代器"></a>迭代器</h3><ul>
+<li><input disabled="" type="checkbox"> 迭代器分类</li>
+<li><input disabled="" type="checkbox"> 迭代器适配器</li>
+</ul>
+<h3 id="算法"><a href="#算法" class="headerlink" title="算法"></a>算法</h3><ul>
+<li><input disabled="" type="checkbox"> 非修改序列算法</li>
+<li><input disabled="" type="checkbox"> 修改序列算法</li>
+<li><input disabled="" type="checkbox"> 排序和搜索</li>
+<li><input disabled="" type="checkbox"> 数值算法</li>
+</ul>
+<h3 id="函数对象和工具"><a href="#函数对象和工具" class="headerlink" title="函数对象和工具"></a>函数对象和工具</h3><ul>
+<li><input disabled="" type="checkbox"> 算术、比较、逻辑函数对象</li>
+<li><input disabled="" type="checkbox"> std::bind</li>
+<li><input disabled="" type="checkbox"> 函数包装器</li>
+</ul>
+<h3 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h3><ul>
+<li><input disabled="" type="checkbox"> basic_string, string, wstring</li>
+<li><input disabled="" type="checkbox"> 字符串视图</li>
+</ul>
+<h3 id="输入-输出流"><a href="#输入-输出流" class="headerlink" title="输入&#x2F;输出流"></a>输入&#x2F;输出流</h3><ul>
+<li><input disabled="" type="checkbox"> 标准流</li>
+<li><input disabled="" type="checkbox"> 格式化输入输出</li>
+<li><input disabled="" type="checkbox"> 文件流</li>
+<li><input disabled="" type="checkbox"> 字符串流</li>
+</ul>
+<h3 id="智能指针"><a href="#智能指针" class="headerlink" title="智能指针"></a>智能指针</h3><ul>
+<li><input disabled="" type="checkbox"> unique_ptr</li>
+<li><input disabled="" type="checkbox"> shared_ptr</li>
+<li><input disabled="" type="checkbox"> weak_ptr</li>
+</ul>
+<h3 id="并发和多线程"><a href="#并发和多线程" class="headerlink" title="并发和多线程"></a>并发和多线程</h3><ul>
+<li><input disabled="" type="checkbox"> 线程</li>
+<li><input disabled="" type="checkbox"> 互斥量</li>
+<li><input disabled="" type="checkbox"> 条件变量</li>
+<li><input disabled="" type="checkbox"> 异步</li>
+<li><input disabled="" type="checkbox"> 原子操作</li>
+</ul>
+<h3 id="其他标准库组件"><a href="#其他标准库组件" class="headerlink" title="其他标准库组件"></a>其他标准库组件</h3><ul>
+<li><input disabled="" type="checkbox"> 元组</li>
+<li><input disabled="" type="checkbox"> 可选类型</li>
+<li><input disabled="" type="checkbox"> 变体类型</li>
+<li><input disabled="" type="checkbox"> 任意类型</li>
+<li><input disabled="" type="checkbox"> 类型特质</li>
+<li><input disabled="" type="checkbox"> 时间库</li>
+<li><input disabled="" type="checkbox"> 随机数</li>
+<li><input disabled="" type="checkbox"> 正则表达式</li>
+<li><input disabled="" type="checkbox"> 文件系统</li>
+</ul>
+<h3 id="生态系统"><a href="#生态系统" class="headerlink" title="生态系统"></a>生态系统</h3><ul>
+<li><input disabled="" type="checkbox"> 第三方库</li>
+<li><input disabled="" type="checkbox"> 构建系统</li>
+<li><input disabled="" type="checkbox"> 包管理器</li>
+<li><input disabled="" type="checkbox"> 编译器</li>
+<li><input disabled="" type="checkbox"> 调试和性能分析工具</li>
+</ul>
+<hr>
+<h2 id="第三层：内存与抽象模型"><a href="#第三层：内存与抽象模型" class="headerlink" title="第三层：内存与抽象模型"></a>第三层：内存与抽象模型</h2><h3 id="内存模型"><a href="#内存模型" class="headerlink" title="内存模型"></a>内存模型</h3><ul>
+<li><input disabled="" type="checkbox"> 存储期</li>
+<li><input disabled="" type="checkbox"> 内存对齐</li>
+<li><input disabled="" type="checkbox"> 对象模型</li>
+<li><input disabled="" type="checkbox"> 内存模型（多线程）</li>
+</ul>
+<h3 id="内存管理"><a href="#内存管理" class="headerlink" title="内存管理"></a>内存管理</h3><ul>
+<li><input disabled="" type="checkbox"> new&#x2F;delete</li>
+<li><input disabled="" type="checkbox"> new[]&#x2F;delete[]</li>
+<li><input disabled="" type="checkbox"> 分配器</li>
+</ul>
+<h3 id="指针和引用"><a href="#指针和引用" class="headerlink" title="指针和引用"></a>指针和引用</h3><ul>
+<li><input disabled="" type="checkbox"> 原始指针</li>
+<li><input disabled="" type="checkbox"> 左值引用</li>
+<li><input disabled="" type="checkbox"> 右值引用</li>
+<li><input disabled="" type="checkbox"> 指针算术</li>
+<li><input disabled="" type="checkbox"> 指针和数组</li>
+</ul>
+<h3 id="资源管理"><a href="#资源管理" class="headerlink" title="资源管理"></a>资源管理</h3><ul>
+<li><input disabled="" type="checkbox"> RAII</li>
+<li><input disabled="" type="checkbox"> 智能指针</li>
+<li><input disabled="" type="checkbox"> 移动语义</li>
+<li><input disabled="" type="checkbox"> 资源转移</li>
+</ul>
+<h3 id="低级操作"><a href="#低级操作" class="headerlink" title="低级操作"></a>低级操作</h3><ul>
+<li><input disabled="" type="checkbox"> 位操作</li>
+<li><input disabled="" type="checkbox"> volatile</li>
+<li><input disabled="" type="checkbox"> 内存屏障</li>
+<li><input disabled="" type="checkbox"> 内联汇编</li>
+</ul>
+<hr>
+<h2 id="第四层：抽象与范式"><a href="#第四层：抽象与范式" class="headerlink" title="第四层：抽象与范式"></a>第四层：抽象与范式</h2><h3 id="过程化编程"><a href="#过程化编程" class="headerlink" title="过程化编程"></a>过程化编程</h3><ul>
+<li><input disabled="" type="checkbox"> 函数和过程</li>
+<li><input disabled="" type="checkbox"> 模块化编程</li>
+</ul>
+<h3 id="面向对象编程（OOP）"><a href="#面向对象编程（OOP）" class="headerlink" title="面向对象编程（OOP）"></a>面向对象编程（OOP）</h3><ul>
+<li><input disabled="" type="checkbox"> 封装、继承、多态</li>
+<li><input disabled="" type="checkbox"> 设计模式</li>
+</ul>
+<h3 id="泛型编程（GP）"><a href="#泛型编程（GP）" class="headerlink" title="泛型编程（GP）"></a>泛型编程（GP）</h3><ul>
+<li><input disabled="" type="checkbox"> 模板</li>
+<li><input disabled="" type="checkbox"> 概念（C++20）</li>
+<li><input disabled="" type="checkbox"> 策略模式</li>
+<li><input disabled="" type="checkbox"> 特化</li>
+</ul>
+<h3 id="函数式编程（FP）"><a href="#函数式编程（FP）" class="headerlink" title="函数式编程（FP）"></a>函数式编程（FP）</h3><ul>
+<li><input disabled="" type="checkbox"> 不可变性</li>
+<li><input disabled="" type="checkbox"> 高阶函数</li>
+<li><input disabled="" type="checkbox"> 递归</li>
+<li><input disabled="" type="checkbox"> 函数组合</li>
+</ul>
+<h3 id="元编程"><a href="#元编程" class="headerlink" title="元编程"></a>元编程</h3><ul>
+<li><input disabled="" type="checkbox"> 编译时计算</li>
+<li><input disabled="" type="checkbox"> 类型计算</li>
+<li><input disabled="" type="checkbox"> 代码生成</li>
+</ul>
+<h3 id="并发编程"><a href="#并发编程" class="headerlink" title="并发编程"></a>并发编程</h3><ul>
+<li><input disabled="" type="checkbox"> 多线程模型</li>
+<li><input disabled="" type="checkbox"> 异步编程</li>
+<li><input disabled="" type="checkbox"> 并行算法</li>
+<li><input disabled="" type="checkbox"> 协程（C++20）</li>
+</ul>
+<h3 id="混合范式"><a href="#混合范式" class="headerlink" title="混合范式"></a>混合范式</h3><ul>
+<li><input disabled="" type="checkbox"> 结合 OOP、GP 和 FP</li>
+<li><input disabled="" type="checkbox"> 基于策略的设计</li>
+<li><input disabled="" type="checkbox"> 表达式模板</li>
+</ul>
+<hr>
+<h2 id="跨层模块：惯用法-1"><a href="#跨层模块：惯用法-1" class="headerlink" title="跨层模块：惯用法"></a>跨层模块：惯用法</h2><h3 id="核心惯用法"><a href="#核心惯用法" class="headerlink" title="核心惯用法"></a>核心惯用法</h3><ul>
+<li><input disabled="" type="checkbox"> RAII - 资源获取即初始化</li>
+<li><input disabled="" type="checkbox"> PIMPL - 指向实现的指针</li>
+<li><input disabled="" type="checkbox"> CRTP - 奇异递归模板模式</li>
+<li><input disabled="" type="checkbox"> SFINAE - 替换失败并非错误</li>
+<li><input disabled="" type="checkbox"> Copy-and-Swap - 拷贝交换惯用法</li>
+<li><input disabled="" type="checkbox"> Rule of Three&#x2F;Five - 三法则&#x2F;五法则</li>
+<li><input disabled="" type="checkbox"> Virtual Constructor - 虚构造函数模式</li>
+<li><input disabled="" type="checkbox"> Type Erasure - 类型擦除</li>
+</ul>
+<h3 id="现代惯用法（C-11-）"><a href="#现代惯用法（C-11-）" class="headerlink" title="现代惯用法（C++11+）"></a>现代惯用法（C++11+）</h3><ul>
+<li><input disabled="" type="checkbox"> 完美转发<ul>
+<li><input disabled="" type="checkbox"> 万能引用</li>
+<li><input disabled="" type="checkbox"> 引用折叠</li>
+<li><input disabled="" type="checkbox"> std::forward</li>
+</ul>
+</li>
+<li><input disabled="" type="checkbox"> 零开销抽象</li>
+<li><input disabled="" type="checkbox"> 值语义 vs 引用语义</li>
+<li><input disabled="" type="checkbox"> 统一初始化<ul>
+<li><input disabled="" type="checkbox"> 聚合体</li>
+<li><input disabled="" type="checkbox"> 初始化列表</li>
+</ul>
+</li>
+<li><input disabled="" type="checkbox"> 类型萃取<ul>
+<li><input disabled="" type="checkbox"> 类型特征查询</li>
+<li><input disabled="" type="checkbox"> 类型变换</li>
+</ul>
+</li>
+<li><input disabled="" type="checkbox"> CV 限定符处理</li>
+<li><input disabled="" type="checkbox"> const 正确性</li>
+<li><input disabled="" type="checkbox"> 异常安全保证<ul>
+<li><input disabled="" type="checkbox"> 基本保证</li>
+<li><input disabled="" type="checkbox"> 强保证</li>
+<li><input disabled="" type="checkbox"> 不抛出保证</li>
+</ul>
+</li>
+</ul>
+<h3 id="高级惯用法"><a href="#高级惯用法" class="headerlink" title="高级惯用法"></a>高级惯用法</h3><ul>
+<li><input disabled="" type="checkbox"> 表达式模板</li>
+<li><input disabled="" type="checkbox"> 策略类</li>
+<li><input disabled="" type="checkbox"> 混入模式</li>
+<li><input disabled="" type="checkbox"> 访问者模式</li>
+<li><input disabled="" type="checkbox"> 工厂模式</li>
+<li><input disabled="" type="checkbox"> 观察者模式</li>
+<li><input disabled="" type="checkbox"> 单例模式</li>
+</ul>
+<hr>
+<h2 id="文章创建命令"><a href="#文章创建命令" class="headerlink" title="文章创建命令"></a>文章创建命令</h2><p>使用新的技术文章模板创建文章：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new post <span class="string">&quot;文章标题&quot;</span> --scaffold tech_post</span><br></pre></td></tr></table></figure>
+
+<h2 id="标注说明"><a href="#标注说明" class="headerlink" title="标注说明"></a>标注说明</h2><ul>
+<li>⭐ 入门级：适合初学者</li>
+<li>⭐⭐ 进阶级：需要一定基础</li>
+<li>⭐⭐⭐ 高级：需要深入理解</li>
+<li>⭐⭐⭐⭐ 专家级：需要丰富的经验</li>
+</ul>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://cppreference.cn/w/">cppreference</a></li>
+<li><a target="_blank" rel="noopener" href="https://en.cppreference.com/w/cpp/versions">C++ 标准</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.oreilly.com/library/view/effective-modern-c/9781491908419/">Effective Modern C++</a></li>
+<li><a target="_blank" rel="noopener" href="https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines">C++ Core Guidelines</a></li>
+</ul>
+<hr>
+<blockquote>
+<p><strong>学习建议</strong>：建议按照第一层 → 第二层 → 第三层 → 第四层的顺序学习，惯用法模块可以结合实际应用场景穿插学习。每学习完一个主题，建议编写相应的代码练习以加深理解。</p>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://Memvia.github.io/">Memvia</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://memvia.github.io/posts/modern-cpp-index/">https://memvia.github.io/posts/modern-cpp-index/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://Memvia.github.io" target="_blank">Memvia's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%8E%B0%E4%BB%A3C/">现代C++</a><a class="post-meta__tags" href="/tags/%E7%B3%BB%E5%88%97%E7%B4%A2%E5%BC%95/">系列索引</a></div><div class="post-share"><div class="social-share" data-image="https://i.mituw.com/imgs/2026/02/07/423c193cd50787d4.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/move-semantics/" title="移动语义 - 右值引用与性能优化"><img class="cover" src="https://i.mituw.com/imgs/2026/02/07/423c193cd50787d4.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">移动语义 - 右值引用与性能优化</div></div><div class="info-2"><div class="info-item-1">深入理解 C++11 移动语义的核心概念，掌握右值引用、std::move 和完美转发的使用</div></div></div></a><a class="pagination-related" href="/posts/core-idioms/" title="核心惯用法 - C++ 惯用模式汇总"><img class="cover" src="https://i.mituw.com/imgs/2026/02/07/423c193cd50787d4.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">核心惯用法 - C++ 惯用模式汇总</div></div><div class="info-2"><div class="info-item-1">汇总 C++ 编程中的核心惯用模式，包括 RAII、PIMPL、CRTP、SFINAE 等重要模式</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/posts/stl-containers/" title="容器 - STL 容器全面指南"><img class="cover" src="https://i.mituw.com/imgs/2026/02/07/423c193cd50787d4.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-02-09</div><div class="info-item-2">容器 - STL 容器全面指南</div></div><div class="info-2"><div class="info-item-1">全面掌握 C++ STL 容器的使用，包括序列容器、关联容器、无序容器的特点和最佳实践</div></div></div></a><a class="pagination-related" href="/posts/perfect-forwarding/" title="完美转发 - 万能引用与 std::forward"><img class="cover" src="https://i.mituw.com/imgs/2026/02/07/423c193cd50787d4.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-02-09</div><div class="info-item-2">完美转发 - 万能引用与 std::forward</div></div><div class="info-2"><div class="info-item-1">深入理解 C++11 完美转发机制，掌握万能引用、引用折叠和 std::forward 的原理与应用</div></div></div></a><a class="pagination-related" href="/posts/smart-pointers/" title="智能指针 - 现代 C++ 内存管理"><img class="cover" src="https://i.mituw.com/imgs/2026/02/07/423c193cd50787d4.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-02-09</div><div class="info-item-2">智能指针 - 现代 C++ 内存管理</div></div><div class="info-2"><div class="info-item-1">全面掌握 C++ 智能指针的使用，包括 unique_ptr、shared_ptr 和 weak_ptr 的原理与最佳实践</div></div></div></a><a class="pagination-related" href="/posts/move-semantics/" title="移动语义 - 右值引用与性能优化"><img class="cover" src="https://i.mituw.com/imgs/2026/02/07/423c193cd50787d4.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-02-09</div><div class="info-item-2">移动语义 - 右值引用与性能优化</div></div><div class="info-2"><div class="info-item-1">深入理解 C++11 移动语义的核心概念，掌握右值引用、std::move 和完美转发的使用</div></div></div></a><a class="pagination-related" href="/posts/raii-resource-acquisition-is-initialization/" title="RAII - 资源获取即初始化"><img class="cover" src="https://i.mituw.com/imgs/2026/02/07/423c193cd50787d4.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-02-09</div><div class="info-item-2">RAII - 资源获取即初始化</div></div><div class="info-2"><div class="info-item-1">深入理解 C++ 中最重要的资源管理惯用法 RAII，掌握安全、高效的资源管理方式</div></div></div></a><a class="pagination-related" href="/posts/core-idioms/" title="核心惯用法 - C++ 惯用模式汇总"><img class="cover" src="https://i.mituw.com/imgs/2026/02/07/423c193cd50787d4.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-02-09</div><div class="info-item-2">核心惯用法 - C++ 惯用模式汇总</div></div><div class="info-2"><div class="info-item-1">汇总 C++ 编程中的核心惯用模式，包括 RAII、PIMPL、CRTP、SFINAE 等重要模式</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Memvia</div><div class="author-info-description">现代C++程序语言学习 | 笔记</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">9</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">20</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">14</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Memvia"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/Memvia" target="_blank" title="Github"><i class="fab fa-github" style="color: #23282d;"></i></a><a class="social-icon" href="https://space.bilibili.com/" target="_blank" title="bilibili"><i class="fab fa-bilibili" style="color: #01affd;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content"><style>
+.announcement-card {
+    --main-color: #404068;
+    --secondary-color: #5d89a4;
+    position: relative;
+    overflow: hidden;
+}
+.announcement-content {
+    font-size: 1rem; 
+    line-height: 1.2; 
+    color: #ffffff;
+    position: relative;
+}
+.highlight {
+    color: var(--main-color);
+    font-weight: 1000;
+    font-size: 1.2rem; 
+}
+.announcement-content ul {
+    list-style-type: none;
+    margin: 0.8rem 0; 
+    padding-left: 1.5rem;   
+}
+</style>
+<div class="announcement-card">
+    <div class="announcement-content">
+        <p><span class="highlight">欢迎来到「行尘」的博客</span>！</p>
+        <p><strong>步履匆匆，寻觅半生</strong></p>
+    </div>
+</div>
+</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%8E%B0%E4%BB%A3-C-%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80-%E7%B3%BB%E5%88%97%E7%B4%A2%E5%BC%95"><span class="toc-number">1.</span> <span class="toc-text">现代 C++ 编程语言 - 系列索引</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF%E5%9B%BE"><span class="toc-number">1.1.</span> <span class="toc-text">学习路线图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B7%A8%E5%B1%82%E6%A8%A1%E5%9D%97%EF%BC%9A%E6%83%AF%E7%94%A8%E6%B3%95"><span class="toc-number">1.2.</span> <span class="toc-text">跨层模块：惯用法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E5%B1%82%EF%BC%9A%E6%A0%B8%E5%BF%83%E8%AF%AD%E8%A8%80%E7%89%B9%E6%80%A7"><span class="toc-number">1.3.</span> <span class="toc-text">第一层：核心语言特性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95%E5%92%8C%E8%AF%AD%E4%B9%89"><span class="toc-number">1.3.1.</span> <span class="toc-text">基本语法和语义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%BD%E6%95%B0"><span class="toc-number">1.3.2.</span> <span class="toc-text">函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%BC%96%E7%A8%8B"><span class="toc-number">1.3.3.</span> <span class="toc-text">面向对象编程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A8%A1%E6%9D%BF%E5%92%8C%E6%B3%9B%E5%9E%8B%E7%BC%96%E7%A8%8B"><span class="toc-number">1.3.4.</span> <span class="toc-text">模板和泛型编程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86"><span class="toc-number">1.3.5.</span> <span class="toc-text">异常处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8D%E5%AD%97%E7%A9%BA%E9%97%B4"><span class="toc-number">1.3.6.</span> <span class="toc-text">名字空间</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%84%E5%A4%84%E7%90%86%E5%92%8C%E7%BC%96%E8%AF%91"><span class="toc-number">1.3.7.</span> <span class="toc-text">预处理和编译</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E8%AF%AD%E8%A8%80%E7%89%B9%E6%80%A7"><span class="toc-number">1.3.8.</span> <span class="toc-text">其他语言特性</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E5%B1%82%EF%BC%9A%E6%A0%87%E5%87%86%E5%BA%93%E4%B8%8E%E7%94%9F%E6%80%81%E7%B3%BB%E7%BB%9F"><span class="toc-number">1.4.</span> <span class="toc-text">第二层：标准库与生态系统</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%B9%E5%99%A8"><span class="toc-number">1.4.1.</span> <span class="toc-text">容器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%AD%E4%BB%A3%E5%99%A8"><span class="toc-number">1.4.2.</span> <span class="toc-text">迭代器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%97%E6%B3%95"><span class="toc-number">1.4.3.</span> <span class="toc-text">算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%BD%E6%95%B0%E5%AF%B9%E8%B1%A1%E5%92%8C%E5%B7%A5%E5%85%B7"><span class="toc-number">1.4.4.</span> <span class="toc-text">函数对象和工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="toc-number">1.4.5.</span> <span class="toc-text">字符串</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BE%93%E5%85%A5-%E8%BE%93%E5%87%BA%E6%B5%81"><span class="toc-number">1.4.6.</span> <span class="toc-text">输入&#x2F;输出流</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88"><span class="toc-number">1.4.7.</span> <span class="toc-text">智能指针</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B9%B6%E5%8F%91%E5%92%8C%E5%A4%9A%E7%BA%BF%E7%A8%8B"><span class="toc-number">1.4.8.</span> <span class="toc-text">并发和多线程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E6%A0%87%E5%87%86%E5%BA%93%E7%BB%84%E4%BB%B6"><span class="toc-number">1.4.9.</span> <span class="toc-text">其他标准库组件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%9F%E6%80%81%E7%B3%BB%E7%BB%9F"><span class="toc-number">1.4.10.</span> <span class="toc-text">生态系统</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E5%B1%82%EF%BC%9A%E5%86%85%E5%AD%98%E4%B8%8E%E6%8A%BD%E8%B1%A1%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.5.</span> <span class="toc-text">第三层：内存与抽象模型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.5.1.</span> <span class="toc-text">内存模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86"><span class="toc-number">1.5.2.</span> <span class="toc-text">内存管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%87%E9%92%88%E5%92%8C%E5%BC%95%E7%94%A8"><span class="toc-number">1.5.3.</span> <span class="toc-text">指针和引用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86"><span class="toc-number">1.5.4.</span> <span class="toc-text">资源管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%8E%E7%BA%A7%E6%93%8D%E4%BD%9C"><span class="toc-number">1.5.5.</span> <span class="toc-text">低级操作</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E5%9B%9B%E5%B1%82%EF%BC%9A%E6%8A%BD%E8%B1%A1%E4%B8%8E%E8%8C%83%E5%BC%8F"><span class="toc-number">1.6.</span> <span class="toc-text">第四层：抽象与范式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%87%E7%A8%8B%E5%8C%96%E7%BC%96%E7%A8%8B"><span class="toc-number">1.6.1.</span> <span class="toc-text">过程化编程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%BC%96%E7%A8%8B%EF%BC%88OOP%EF%BC%89"><span class="toc-number">1.6.2.</span> <span class="toc-text">面向对象编程（OOP）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%9B%E5%9E%8B%E7%BC%96%E7%A8%8B%EF%BC%88GP%EF%BC%89"><span class="toc-number">1.6.3.</span> <span class="toc-text">泛型编程（GP）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B%EF%BC%88FP%EF%BC%89"><span class="toc-number">1.6.4.</span> <span class="toc-text">函数式编程（FP）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%83%E7%BC%96%E7%A8%8B"><span class="toc-number">1.6.5.</span> <span class="toc-text">元编程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B"><span class="toc-number">1.6.6.</span> <span class="toc-text">并发编程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B7%B7%E5%90%88%E8%8C%83%E5%BC%8F"><span class="toc-number">1.6.7.</span> <span class="toc-text">混合范式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B7%A8%E5%B1%82%E6%A8%A1%E5%9D%97%EF%BC%9A%E6%83%AF%E7%94%A8%E6%B3%95-1"><span class="toc-number">1.7.</span> <span class="toc-text">跨层模块：惯用法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E6%83%AF%E7%94%A8%E6%B3%95"><span class="toc-number">1.7.1.</span> <span class="toc-text">核心惯用法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8E%B0%E4%BB%A3%E6%83%AF%E7%94%A8%E6%B3%95%EF%BC%88C-11-%EF%BC%89"><span class="toc-number">1.7.2.</span> <span class="toc-text">现代惯用法（C++11+）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%AB%98%E7%BA%A7%E6%83%AF%E7%94%A8%E6%B3%95"><span class="toc-number">1.7.3.</span> <span class="toc-text">高级惯用法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E7%AB%A0%E5%88%9B%E5%BB%BA%E5%91%BD%E4%BB%A4"><span class="toc-number">1.8.</span> <span class="toc-text">文章创建命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%87%E6%B3%A8%E8%AF%B4%E6%98%8E"><span class="toc-number">1.9.</span> <span class="toc-text">标注说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-number">1.10.</span> <span class="toc-text">参考资料</span></a></li></ol></li></ol></div></div><div class="card-widget card-post-series"><div class="item-headline"><i class="fa-solid fa-layer-group"></i><span>现代 C++ 编程语言</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/raii-resource-acquisition-is-initialization/" title="RAII - 资源获取即初始化"><img src="https://i.mituw.com/imgs/2026/02/07/423c193cd50787d4.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="RAII - 资源获取即初始化"></a><div class="content"><a class="title" href="/posts/raii-resource-acquisition-is-initialization/" title="RAII - 资源获取即初始化">RAII - 资源获取即初始化</a><time datetime="2026-02-09T00:00:00.000Z" title="发表于 2026-02-09 00:00:00">2026-02-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/perfect-forwarding/" title="完美转发 - 万能引用与 std::forward"><img src="https://i.mituw.com/imgs/2026/02/07/423c193cd50787d4.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="完美转发 - 万能引用与 std::forward"></a><div class="content"><a class="title" href="/posts/perfect-forwarding/" title="完美转发 - 万能引用与 std::forward">完美转发 - 万能引用与 std::forward</a><time datetime="2026-02-09T00:00:00.000Z" title="发表于 2026-02-09 00:00:00">2026-02-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/stl-containers/" title="容器 - STL 容器全面指南"><img src="https://i.mituw.com/imgs/2026/02/07/423c193cd50787d4.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="容器 - STL 容器全面指南"></a><div class="content"><a class="title" href="/posts/stl-containers/" title="容器 - STL 容器全面指南">容器 - STL 容器全面指南</a><time datetime="2026-02-09T00:00:00.000Z" title="发表于 2026-02-09 00:00:00">2026-02-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/smart-pointers/" title="智能指针 - 现代 C++ 内存管理"><img src="https://i.mituw.com/imgs/2026/02/07/423c193cd50787d4.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="智能指针 - 现代 C++ 内存管理"></a><div class="content"><a class="title" href="/posts/smart-pointers/" title="智能指针 - 现代 C++ 内存管理">智能指针 - 现代 C++ 内存管理</a><time datetime="2026-02-09T00:00:00.000Z" title="发表于 2026-02-09 00:00:00">2026-02-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/modern-cpp-index/" title="现代 C++ 编程语言 - 系列索引"><img src="https://i.mituw.com/imgs/2026/02/07/423c193cd50787d4.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="现代 C++ 编程语言 - 系列索引"></a><div class="content"><a class="title" href="/posts/modern-cpp-index/" title="现代 C++ 编程语言 - 系列索引">现代 C++ 编程语言 - 系列索引</a><time datetime="2026-02-09T00:00:00.000Z" title="发表于 2026-02-09 00:00:00">2026-02-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/move-semantics/" title="移动语义 - 右值引用与性能优化"><img src="https://i.mituw.com/imgs/2026/02/07/423c193cd50787d4.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="移动语义 - 右值引用与性能优化"></a><div class="content"><a class="title" href="/posts/move-semantics/" title="移动语义 - 右值引用与性能优化">移动语义 - 右值引用与性能优化</a><time datetime="2026-02-09T00:00:00.000Z" title="发表于 2026-02-09 00:00:00">2026-02-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/type-deduction/" title="类型推导 - auto 与 decltype"><img src="https://i.mituw.com/imgs/2026/02/07/423c193cd50787d4.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="类型推导 - auto 与 decltype"></a><div class="content"><a class="title" href="/posts/type-deduction/" title="类型推导 - auto 与 decltype">类型推导 - auto 与 decltype</a><time datetime="2026-02-09T00:00:00.000Z" title="发表于 2026-02-09 00:00:00">2026-02-09</time></div></div></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/raii-resource-acquisition-is-initialization/" title="RAII - 资源获取即初始化"><img src="https://i.mituw.com/imgs/2026/02/07/423c193cd50787d4.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="RAII - 资源获取即初始化"/></a><div class="content"><a class="title" href="/posts/raii-resource-acquisition-is-initialization/" title="RAII - 资源获取即初始化">RAII - 资源获取即初始化</a><time datetime="2026-02-09T00:00:00.000Z" title="发表于 2026-02-09 00:00:00">2026-02-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/perfect-forwarding/" title="完美转发 - 万能引用与 std::forward"><img src="https://i.mituw.com/imgs/2026/02/07/423c193cd50787d4.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="完美转发 - 万能引用与 std::forward"/></a><div class="content"><a class="title" href="/posts/perfect-forwarding/" title="完美转发 - 万能引用与 std::forward">完美转发 - 万能引用与 std::forward</a><time datetime="2026-02-09T00:00:00.000Z" title="发表于 2026-02-09 00:00:00">2026-02-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/stl-containers/" title="容器 - STL 容器全面指南"><img src="https://i.mituw.com/imgs/2026/02/07/423c193cd50787d4.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="容器 - STL 容器全面指南"/></a><div class="content"><a class="title" href="/posts/stl-containers/" title="容器 - STL 容器全面指南">容器 - STL 容器全面指南</a><time datetime="2026-02-09T00:00:00.000Z" title="发表于 2026-02-09 00:00:00">2026-02-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/smart-pointers/" title="智能指针 - 现代 C++ 内存管理"><img src="https://i.mituw.com/imgs/2026/02/07/423c193cd50787d4.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="智能指针 - 现代 C++ 内存管理"/></a><div class="content"><a class="title" href="/posts/smart-pointers/" title="智能指针 - 现代 C++ 内存管理">智能指针 - 现代 C++ 内存管理</a><time datetime="2026-02-09T00:00:00.000Z" title="发表于 2026-02-09 00:00:00">2026-02-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/core-idioms/" title="核心惯用法 - C++ 惯用模式汇总"><img src="https://i.mituw.com/imgs/2026/02/07/423c193cd50787d4.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="核心惯用法 - C++ 惯用模式汇总"/></a><div class="content"><a class="title" href="/posts/core-idioms/" title="核心惯用法 - C++ 惯用模式汇总">核心惯用法 - C++ 惯用模式汇总</a><time datetime="2026-02-09T00:00:00.000Z" title="发表于 2026-02-09 00:00:00">2026-02-09</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2026 By Memvia</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.3</a></span></div><div class="footer_custom_text"><style>
+  .footer {
+    text-align: center;
+    position: relative;
+  }
+  .footer p {
+    margin: 0.5rem 0;
+    line-height: 1;
+  }
+  .tagline {
+    font-size: 0.8rem;
+    color: #8bd7f1;
+    font-style: italic;
+    font-weight: 500;
+  }
+</style>
+<div class="footer">
+  <p class="tagline">> 绘学识为光，赴无明之渊；照见行路，不照归处。 <</p>
+</div>
+</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.3"></script><script src="/js/main.js?v=5.5.3"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><div class="js-pjax"><script>(() => {
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const config = mermaidSrc.dataset.config ? JSON.parse(mermaidSrc.dataset.config) : {}
+      if (!config.theme) {
+        config.theme = theme
+      }
+      const mermaidThemeConfig = `%%{init: ${JSON.stringify(config)}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      // mermaid v9 and v10 compatibility
+      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (true) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid@11.12.2/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script src="/js/jquery.min.js"></script><script src="/js/footer.js" defer data-pjax></script><div id="aplayer" class="aplayer no-destroy"></div><script src="/js/aplayer.js" defer data-pjax></script><script id="canvas_nest" defer="defer" color="139,215,241" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/dist/canvas-nest.min.js"></script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/dist/click-heart.min.js" async="async" mobile="false"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/metingjs/dist/Meting.min.js"></script><script>(() => {
+  const destroyAplayer = () => {
+    if (window.aplayers) {
+      for (let i = 0; i < window.aplayers.length; i++) {
+        if (!window.aplayers[i].options.fixed) {
+          window.aplayers[i].destroy()
+        }
+      }
+    }
+  }
+
+  const runMetingJS = () => {
+    typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+  }
+
+  btf.addGlobalFn('pjaxSend', destroyAplayer, 'destroyAplayer')
+  btf.addGlobalFn('pjaxComplete', loadMeting, 'runMetingJS')
+})()</script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="行尘之中，见微光" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.3"></script></div></div><!-- hexo injector body_end start --><script data-pjax>
+  function butterfly_swiper_injector_config(){
+    var parent_div_git = document.getElementById('recent-posts');
+    var item_html = '<div class="recent-post-item" style="height: auto;width: 100%"><div class="blog-slider swiper-container-fade swiper-container-horizontal" id="swiper_container"><div class="blog-slider__wrp swiper-wrapper" style="transition-duration: 0ms;"><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" onclick="pjax.loadUrl(&quot;posts/modern-cpp-index/&quot;);" href="javascript:void(0);" alt=""><img width="48" height="48" src="https://i.mituw.com/imgs/2026/02/07/423c193cd50787d4.png" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2026-02-09</span><a class="blog-slider__title" onclick="pjax.loadUrl(&quot;posts/modern-cpp-index/&quot;);" href="javascript:void(0);" alt="">现代 C++ 编程语言 - 系列索引</a><div class="blog-slider__text">现代 C++ 编程语言系统性学习系列文章的完整索引和学习路线图</div><a class="blog-slider__button" onclick="pjax.loadUrl(&quot;posts/modern-cpp-index/&quot;);" href="javascript:void(0);" alt="">详情       </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" onclick="pjax.loadUrl(&quot;posts/305bae84/&quot;);" href="javascript:void(0);" alt=""><img width="48" height="48" src="https://i.mituw.com/imgs/2026/02/07/423c193cd50787d4.png" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2026-01-27</span><a class="blog-slider__title" onclick="pjax.loadUrl(&quot;posts/305bae84/&quot;);" href="javascript:void(0);" alt="">Butterfly主题美化</a><div class="blog-slider__text">一些优秀的美化教程参考</div><a class="blog-slider__button" onclick="pjax.loadUrl(&quot;posts/305bae84/&quot;);" href="javascript:void(0);" alt="">详情       </a></div></div></div><div class="blog-slider__pagination swiper-pagination-clickable swiper-pagination-bullets"></div></div></div>';
+    console.log('已挂载butterfly_swiper')
+    parent_div_git.insertAdjacentHTML("afterbegin",item_html)
+    }
+  var elist = 'undefined'.split(',');
+  var cpage = location.pathname;
+  var epage = '/';
+  var flag = 0;
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    butterfly_swiper_injector_config();
+  }
+  else if (epage === cpage){
+    butterfly_swiper_injector_config();
+  }
+  </script><script defer src="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.js"></script><script defer data-pjax src="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper_init.js"></script><!-- hexo injector body_end end --></body></html>
