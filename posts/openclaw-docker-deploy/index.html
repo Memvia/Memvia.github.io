@@ -1,0 +1,1113 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>OpenClaw Docker 容器化部署完全指南 | Memvia's Blog</title><meta name="author" content="Memvia"><meta name="copyright" content="Memvia"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#EFCCC8"><meta name="description" content="OpenClaw 开源 AI 执行引擎的 Docker 容器化部署完整指南，涵盖环境准备、核心部署、全平台配置、AI 模型配置、安全加固和生产环境配置">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OpenClaw Docker 容器化部署完全指南">
+<meta property="og:url" content="https://memvia.github.io/posts/openclaw-docker-deploy/index.html">
+<meta property="og:site_name" content="Memvia&#39;s Blog">
+<meta property="og:description" content="OpenClaw 开源 AI 执行引擎的 Docker 容器化部署完整指南，涵盖环境准备、核心部署、全平台配置、AI 模型配置、安全加固和生产环境配置">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.mituw.com/imgs/2026/02/07/423c193cd50787d4.png">
+<meta property="article:published_time" content="2026-03-07T14:00:00.000Z">
+<meta property="article:modified_time" content="2026-03-07T14:00:00.000Z">
+<meta property="article:author" content="Memvia">
+<meta property="article:tag" content="Docker">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="部署教程">
+<meta property="article:tag" content="OpenClaw">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.mituw.com/imgs/2026/02/07/423c193cd50787d4.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "OpenClaw Docker 容器化部署完全指南",
+  "url": "https://memvia.github.io/posts/openclaw-docker-deploy/",
+  "image": "https://i.mituw.com/imgs/2026/02/07/423c193cd50787d4.png",
+  "datePublished": "2026-03-07T14:00:00.000Z",
+  "dateModified": "2026-03-07T14:00:00.000Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Memvia",
+      "url": "https://Memvia.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="https://memvia.github.io/posts/openclaw-docker-deploy/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.3"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#1C1A24')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#EFCCC8')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":"ture","top_n_per_article":1,"unescape":false,"pagination":{"enable":true,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":true,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":150,"languages":{"author":"作者: Memvia","link":"链接: ","source":"来源: Memvia's Blog","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#9583DE","bgDark":"#1f1f1f","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'OpenClaw Docker 容器化部署完全指南',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/background.css"></script><link rel="stylesheet" href="/css/transparent.css"></script><link rel="stylesheet" href="/css/footer.css"></script><!-- hexo injector head_end start --><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiperstyle.css" media="print" onload="this.media='all'"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      if ($loadingBox.classList.contains('loaded')) return
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+
+  if (document.readyState === 'complete') {
+    preloader.endLoading()
+  } else {
+    window.addEventListener('load', preloader.endLoading)
+    document.addEventListener('DOMContentLoaded', preloader.endLoading)
+    // Add timeout protection: force end after 7 seconds
+    setTimeout(preloader.endLoading, 7000)
+  }
+
+  if (true) {
+    btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+    btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+  }
+})()</script><div class="bg-animation" id="web_bg"></div><script>(() => {
+  const arr = ["background-image: url(https://i.mituw.com/imgs/2026/02/07/7154507bc224f39f.png);","background-image: url(https://i.mituw.com/imgs/2026/02/07/11fc03b4d7b5e3d9.png);","background-image: url(https://i.mituw.com/imgs/2026/02/07/37975c46c7a3817c.png);"]
+  const webBgDiv = document.getElementById('web_bg')
+
+  const setRandomBg = () => {
+    webBgDiv.style = arr[Math.floor(Math.random() * arr.length)]
+    requestAnimationFrame(() => webBgDiv.classList.add('bg-animation'))
+  }
+
+  document.addEventListener('pjax:send', () => {
+    webBgDiv.style = ''
+    webBgDiv.classList.remove('bg-animation')
+  })
+
+  document.addEventListener('pjax:complete', setRandomBg)
+  document.addEventListener('DOMContentLoaded', setRandomBg)
+})()
+</script><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">11</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">25</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">18</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/comments/"><i class="fa-fw fas fa-comments"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://i.mituw.com/imgs/2026/02/07/423c193cd50787d4.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/nav_logo.png" alt="Logo"><span class="site-name">Memvia's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">OpenClaw Docker 容器化部署完全指南</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/comments/"><i class="fa-fw fas fa-comments"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">OpenClaw Docker 容器化部署完全指南</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-03-07T14:00:00.000Z" title="发表于 2026-03-07 14:00:00">2026-03-07</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-07T14:00:00.000Z" title="更新于 2026-03-07 14:00:00">2026-03-07</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8A%80%E6%9C%AF%E6%95%99%E7%A8%8B/">技术教程</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8A%80%E6%9C%AF%E6%95%99%E7%A8%8B/AI%E5%BA%94%E7%94%A8/">AI应用</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8A%80%E6%9C%AF%E6%95%99%E7%A8%8B/AI%E5%BA%94%E7%94%A8/%E9%83%A8%E7%BD%B2%E6%8C%87%E5%8D%97/">部署指南</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">6.5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>27分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><div id="post-outdate-notice" data="{&quot;limitDay&quot;:365,&quot;messagePrev&quot;:&quot;本文最后更新于&quot;,&quot;messageNext&quot;:&quot;天前，部分内容可能已失效&quot;,&quot;postUpdate&quot;:&quot;2026-03-07 14:00:00&quot;}" hidden></div><h1 id="OpenClaw-Docker-容器化部署完全指南"><a href="#OpenClaw-Docker-容器化部署完全指南" class="headerlink" title="OpenClaw Docker 容器化部署完全指南"></a>OpenClaw Docker 容器化部署完全指南</h1><p>OpenClaw 是一款开源 AI 执行引擎，由 PSPDFKit（现 Nutrient）创始人 Peter Steinberger 开发。与传统聊天机器人不同，它能够通过自然语言指令自主规划和完成全流程任务，而不仅仅是回答问题。本教程将帮助你快速掌握 OpenClaw 的 Docker 容器化部署，实现开箱即用的 AI 助手体验。</p>
+<h2 id="第一部分：概念理解"><a href="#第一部分：概念理解" class="headerlink" title="第一部分：概念理解"></a>第一部分：概念理解</h2><h3 id="1-1-什么是-OpenClaw？"><a href="#1-1-什么是-OpenClaw？" class="headerlink" title="1.1 什么是 OpenClaw？"></a>1.1 什么是 OpenClaw？</h3><p>OpenClaw 本质上是一个<strong>AI 执行引擎</strong>，而非简单的聊天工具。传统 AI（如 ChatGPT）是被动响应式的问题回答者，而 OpenClaw 是主动执行式的任务完成者。你可以把它理解为「AI 驱动的数字员工」，它能够：</p>
+<ul>
+<li><strong>自主规划</strong>：理解复杂任务并制定执行步骤</li>
+<li><strong>工具调用</strong>：执行代码、操作文件、浏览网页、发送消息</li>
+<li><strong>多渠道接入</strong>：通过各种即时通讯平台与你交互</li>
+<li><strong>本地优先</strong>：数据存储在本地，保护隐私安全</li>
+</ul>
+<h3 id="1-2-核心架构"><a href="#1-2-核心架构" class="headerlink" title="1.2 核心架构"></a>1.2 核心架构</h3><p>OpenClaw 采用模块化架构，主要由以下组件构成：</p>
+<table>
+<thead>
+<tr>
+<th>组件</th>
+<th>作用</th>
+<th>类比</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Gateway（网关）</strong></td>
+<td>消息入口、认证、路由、控制平面</td>
+<td>公司前台&#x2F;传达室</td>
+</tr>
+<tr>
+<td><strong>Agent（代理）</strong></td>
+<td>AI 推理引擎，负责思考和决策</td>
+<td>公司的员工</td>
+</tr>
+<tr>
+<td><strong>Tools（工具）</strong></td>
+<td>浏览器、命令行、文件操作等能力</td>
+<td>员工的工具箱</td>
+</tr>
+</tbody></table>
+<p><strong>通俗理解</strong>：Gateway 是公司的接待处，负责接收来自各个渠道（Telegram、飞书、钉钉等）的消息，并进行身份验证；Agent 是具体干活的员工，负责思考和处理任务；Tools 是员工使用的各种工具（电脑、打印机、网络浏览器等）。</p>
+<h3 id="1-3-为什么选择-Docker-部署？"><a href="#1-3-为什么选择-Docker-部署？" class="headerlink" title="1.3 为什么选择 Docker 部署？"></a>1.3 为什么选择 Docker 部署？</h3><p>Docker 部署为 OpenClaw 带来了显著优势：</p>
+<ul>
+<li><strong>环境一致性</strong>：消除「在我机器上能运行」的问题，容器内环境与开发环境完全一致</li>
+<li><strong>隔离性</strong>：保护主机环境，出了问题不会影响其他服务</li>
+<li><strong>可移植性</strong>：易于在不同服务器间迁移</li>
+<li><strong>简化依赖管理</strong>：无需在主机上安装 Node.js 等运行时</li>
+<li><strong>沙箱支持</strong>：可使用 Docker 实现 Agent 工具的隔离执行</li>
+</ul>
+<h2 id="第二部分：环境准备"><a href="#第二部分：环境准备" class="headerlink" title="第二部分：环境准备"></a>第二部分：环境准备</h2><h3 id="2-1-服务器选择"><a href="#2-1-服务器选择" class="headerlink" title="2.1 服务器选择"></a>2.1 服务器选择</h3><p>OpenClaw 对服务器的要求适中：</p>
+<table>
+<thead>
+<tr>
+<th>配置项</th>
+<th>最低要求</th>
+<th>推荐配置</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CPU</td>
+<td>2 核心</td>
+<td>4 核心</td>
+</tr>
+<tr>
+<td>内存</td>
+<td>4 GB</td>
+<td>8 GB</td>
+</tr>
+<tr>
+<td>磁盘</td>
+<td>20 GB</td>
+<td>50 GB SSD</td>
+</tr>
+<tr>
+<td>网络</td>
+<td>公网可访问</td>
+<td>固定公网 IP 或域名</td>
+</tr>
+</tbody></table>
+<p><strong>为什么需要公网访问？</strong> 因为各消息平台（飞书、钉钉等）需要能够回调到你的服务器。如果部署在家庭网络，需要配置端口转发或使用内网穿透。</p>
+<h3 id="2-2-Docker-环境安装"><a href="#2-2-Docker-环境安装" class="headerlink" title="2.2 Docker 环境安装"></a>2.2 Docker 环境安装</h3><p>推荐使用国内一键安装脚本，速度更快：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用国内一键安装脚本</span></span><br><span class="line">bash &lt;(wget -qO- https://xuanyuan.cloud/docker.sh)</span><br></pre></td></tr></table></figure>
+
+<p>安装完成后验证：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 验证 Docker 安装</span></span><br><span class="line">docker --version</span><br><span class="line"></span><br><span class="line"><span class="comment"># 验证 Docker Compose</span></span><br><span class="line">docker-compose --version</span><br></pre></td></tr></table></figure>
+
+<p>如果已安装 Docker 但版本较旧，可使用以下命令升级：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 升级 Docker</span></span><br><span class="line">curl -fsSL https://get.docker.com | bash</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动 Docker 服务</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl start docker</span><br><span class="line"><span class="built_in">sudo</span> systemctl <span class="built_in">enable</span> docker</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-3-国内镜像配置"><a href="#2-3-国内镜像配置" class="headerlink" title="2.3 国内镜像配置"></a>2.3 国内镜像配置</h3><p>由于 Docker Hub 在国内访问速度较慢，建议配置国内镜像源。首先创建或编辑 Docker 配置文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> <span class="built_in">mkdir</span> -p /etc/docker</span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">tee</span> /etc/docker/daemon.json &lt;&lt;<span class="string">EOF</span></span><br><span class="line"><span class="string">&#123;</span></span><br><span class="line"><span class="string">  &quot;registry-mirrors&quot;: [</span></span><br><span class="line"><span class="string">    &quot;https://docker.mirrors.ustc.edu.cn&quot;,</span></span><br><span class="line"><span class="string">    &quot;https://hub-mirror.c.163.com&quot;,</span></span><br><span class="line"><span class="string">    &quot;https://mirror.baidubce.com&quot;</span></span><br><span class="line"><span class="string">  ]</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">EOF</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 重启 Docker 服务</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl daemon-reload</span><br><span class="line"><span class="built_in">sudo</span> systemctl restart docker</span><br></pre></td></tr></table></figure>
+
+<p><strong>为什么需要国内镜像？</strong> Docker 镜像存储在海外服务器，国内直接拉取速度极慢甚至超时。国内镜像源可以将镜像同步到国内 CDN，大幅提升拉取速度。</p>
+<h2 id="第三部分：核心部署"><a href="#第三部分：核心部署" class="headerlink" title="第三部分：核心部署"></a>第三部分：核心部署</h2><h3 id="3-1-目录结构"><a href="#3-1-目录结构" class="headerlink" title="3.1 目录结构"></a>3.1 目录结构</h3><p>首先创建 OpenClaw 的工作目录：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建目录结构</span></span><br><span class="line"><span class="built_in">mkdir</span> -p /opt/openclaw/&#123;config,data,logs&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 进入工作目录</span></span><br><span class="line"><span class="built_in">cd</span> /opt/openclaw</span><br></pre></td></tr></table></figure>
+
+<p>各目录作用：</p>
+<table>
+<thead>
+<tr>
+<th>目录</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>config</td>
+<td>配置文件目录</td>
+</tr>
+<tr>
+<td>data</td>
+<td>数据持久化目录（凭证、会话等）</td>
+</tr>
+<tr>
+<td>logs</td>
+<td>日志目录</td>
+</tr>
+</tbody></table>
+<h3 id="3-2-配置文件"><a href="#3-2-配置文件" class="headerlink" title="3.2 配置文件"></a>3.2 配置文件</h3><h4 id="env-文件"><a href="#env-文件" class="headerlink" title=".env 文件"></a>.env 文件</h4><p>创建环境变量配置文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 生成随机认证令牌</span></span><br><span class="line">openssl rand -hex 32</span><br></pre></td></tr></table></figure>
+
+<p>编辑 <code>.env</code> 文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 编辑 .env 文件</span></span><br><span class="line">vim .<span class="built_in">env</span></span><br></pre></td></tr></table></figure>
+
+<p>填入以下内容：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ===========================================</span></span><br><span class="line"><span class="comment"># OpenClaw Docker 环境变量配置</span></span><br><span class="line"><span class="comment"># ===========================================</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 必填：Gateway 认证令牌（使用 openssl rand -hex 32 生成）</span></span><br><span class="line">OPENCLAW_GATEWAY_TOKEN=your-generated-token-here</span><br><span class="line"></span><br><span class="line"><span class="comment"># 端口配置</span></span><br><span class="line">OPENCLAW_GATEWAY_PORT=18789</span><br><span class="line">OPENCLAW_BRIDGE_PORT=18790</span><br><span class="line"></span><br><span class="line"><span class="comment"># 时区配置（推荐使用中国时区）</span></span><br><span class="line">TZ=Asia/Shanghai</span><br><span class="line"></span><br><span class="line"><span class="comment"># 可选：持久化配置</span></span><br><span class="line">OPENCLAW_HOME_VOLUME=openclaw_home</span><br></pre></td></tr></table></figure>
+
+<p><strong>为什么要生成随机 Token？</strong> Token 是访问 Gateway 的唯一凭证，相当于门锁的钥匙。使用 <code>openssl rand -hex 32</code> 生成的是 64 位十六进制随机字符串，强度极高，无法被暴力破解。</p>
+<h4 id="docker-compose-yml"><a href="#docker-compose-yml" class="headerlink" title="docker-compose.yml"></a>docker-compose.yml</h4><p>创建 Docker Compose 配置文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 编辑 docker-compose.yml</span></span><br><span class="line">vim docker-compose.yml</span><br></pre></td></tr></table></figure>
+
+<p>填入以下内容：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">&#x27;3.8&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">openclaw-gateway:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">ghcr.io/openclaw/openclaw:latest</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">openclaw-gateway</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">unless-stopped</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;18789:18789&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;18790:18790&quot;</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./data:/home/node</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./config:/home/node/.openclaw</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">OPENCLAW_GATEWAY_TOKEN=$&#123;OPENCLAW_GATEWAY_TOKEN&#125;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">OPENCLAW_GATEWAY_PORT=18789</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">TZ=$&#123;TZ:-Asia/Shanghai&#125;</span></span><br><span class="line">    <span class="attr">healthcheck:</span></span><br><span class="line">      <span class="attr">test:</span> [<span class="string">&quot;CMD&quot;</span>, <span class="string">&quot;curl&quot;</span>, <span class="string">&quot;-f&quot;</span>, <span class="string">&quot;http://localhost:18789/healthz&quot;</span>]</span><br><span class="line">      <span class="attr">interval:</span> <span class="string">30s</span></span><br><span class="line">      <span class="attr">timeout:</span> <span class="string">10s</span></span><br><span class="line">      <span class="attr">retries:</span> <span class="number">3</span></span><br><span class="line">      <span class="attr">start_period:</span> <span class="string">60s</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">openclaw-cli:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">ghcr.io/openclaw/openclaw:latest</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">openclaw-cli</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">&quot;no&quot;</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./data:/home/node</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./config:/home/node/.openclaw</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">OPENCLAW_GATEWAY_TOKEN=$&#123;OPENCLAW_GATEWAY_TOKEN&#125;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">TZ=$&#123;TZ:-Asia/Shanghai&#125;</span></span><br><span class="line">    <span class="attr">network_mode:</span> <span class="string">service:openclaw-gateway</span></span><br><span class="line">    <span class="attr">depends_on:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">openclaw-gateway</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>配置说明</strong>：</p>
+<ul>
+<li><code>image: ghcr.io/openclaw/openclaw:latest</code>：使用 GitHub Container Registry 的官方镜像</li>
+<li><code>restart: unless-stopped</code>：容器异常退出时自动重启</li>
+<li><code>volumes</code>：将主机目录挂载到容器，实现数据持久化</li>
+<li><code>network_mode: service:openclaw-gateway</code>：CLI 与 Gateway 共享网络栈</li>
+<li><code>healthcheck</code>：健康检查，确保服务正常运行</li>
+</ul>
+<h3 id="3-3-环境变量详解"><a href="#3-3-环境变量详解" class="headerlink" title="3.3 环境变量详解"></a>3.3 环境变量详解</h3><p>OpenClaw 支持丰富的环境变量配置，以下是常用变量：</p>
+<table>
+<thead>
+<tr>
+<th>变量名</th>
+<th>必填</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>OPENCLAW_GATEWAY_TOKEN</code></td>
+<td>是</td>
+<td>Gateway 认证令牌，建议使用 64 位随机字符串</td>
+</tr>
+<tr>
+<td><code>OPENCLAW_GATEWAY_PORT</code></td>
+<td>否</td>
+<td>Gateway 端口，默认 18789</td>
+</tr>
+<tr>
+<td><code>OPENCLAW_GATEWAY_BIND</code></td>
+<td>否</td>
+<td>绑定模式：loopback（本地）、lan（局域网）</td>
+</tr>
+<tr>
+<td><code>OPENCLAW_BRIDGE_PORT</code></td>
+<td>否</td>
+<td>Bridge 协议端口，默认 18790</td>
+</tr>
+<tr>
+<td><code>OPENCLAW_HOME_VOLUME</code></td>
+<td>否</td>
+<td>Docker 命名卷，用于持久化 &#x2F;home&#x2F;node</td>
+</tr>
+<tr>
+<td><code>OPENCLAW_SANDBOX</code></td>
+<td>否</td>
+<td>是否启用沙箱：1&#x2F;true&#x2F;yes&#x2F;on</td>
+</tr>
+</tbody></table>
+<p><strong>进阶环境变量</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 扩展挂载（将主机目录映射到容器）</span></span><br><span class="line">OPENCLAW_EXTRA_MOUNTS=<span class="string">&quot;<span class="variable">$HOME</span>/.codex:/home/node/.codex:ro&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 预装系统包</span></span><br><span class="line">OPENCLAW_DOCKER_APT_PACKAGES=<span class="string">&quot;git curl jq ffmpeg&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 预装扩展依赖</span></span><br><span class="line">OPENCLAW_EXTENSIONS=<span class="string">&quot;diagnostics-otel matrix&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 禁用浏览器图形加速（特殊需求）</span></span><br><span class="line">OPENCLAW_BROWSER_DISABLE_GRAPHICS_FLAGS=0</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-4-首次启动"><a href="#3-4-首次启动" class="headerlink" title="3.4 首次启动"></a>3.4 首次启动</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 启动服务（后台运行）</span></span><br><span class="line">docker-compose up -d</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看启动日志</span></span><br><span class="line">docker-compose logs -f</span><br><span class="line"></span><br><span class="line"><span class="comment"># 检查容器状态</span></span><br><span class="line">docker-compose ps</span><br></pre></td></tr></table></figure>
+
+<p>首次启动会进行初始化，可能需要几分钟时间。日志中看到以下信息表示启动成功：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openclaw-gateway | Gateway listening on http://0.0.0.0:18789</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-5-验证部署"><a href="#3-5-验证部署" class="headerlink" title="3.5 验证部署"></a>3.5 验证部署</h3><p>访问 Control UI 验证部署：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 方式一：本地访问</span></span><br><span class="line">curl -f http://127.0.0.1:18789/healthz</span><br><span class="line"></span><br><span class="line"><span class="comment"># 方式二：检查就绪状态</span></span><br><span class="line">curl -f http://127.0.0.1:18789/readyz</span><br><span class="line"></span><br><span class="line"><span class="comment"># 方式三：获取详细健康信息</span></span><br><span class="line">docker-compose <span class="built_in">exec</span> openclaw-gateway node dist/index.js health --token <span class="string">&quot;<span class="variable">$OPENCLAW_GATEWAY_TOKEN</span>&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>成功响应示例：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;status&quot;</span><span class="punctuation">:</span> <span class="string">&quot;ok&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2026.2.26&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;uptime&quot;</span><span class="punctuation">:</span> <span class="number">3600</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>打开浏览器访问 <code>http://服务器IP:18789</code>，输入之前生成的 Token 即可进入控制界面。</p>
+<h2 id="第四部分：全平台配置"><a href="#第四部分：全平台配置" class="headerlink" title="第四部分：全平台配置"></a>第四部分：全平台配置</h2><blockquote>
+<p><strong>重要前置说明</strong>：部分国内平台（飞书、钉钉、QQ、企业微信等）需要安装对应的插件才能使用。在配置渠道之前，请先安装所需的插件：</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入 CLI 容器</span></span><br><span class="line">docker <span class="built_in">exec</span> -it openclaw-cli /bin/bash</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看可用插件</span></span><br><span class="line">openclaw plugins list</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装所需插件（以飞书为例）</span></span><br><span class="line"><span class="comment"># openclaw plugins install @openclaw/feishu</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看渠道帮助</span></span><br><span class="line">openclaw channels --<span class="built_in">help</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 退出容器</span></span><br><span class="line"><span class="built_in">exit</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="4-1-消息平台概览"><a href="#4-1-消息平台概览" class="headerlink" title="4.1 消息平台概览"></a>4.1 消息平台概览</h3><p>OpenClaw 支持众多消息平台，以下是常用平台：</p>
+<table>
+<thead>
+<tr>
+<th>平台</th>
+<th>配置难度</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Telegram</td>
+<td>⭐ 简单</td>
+<td>最快上手，只需 Bot Token</td>
+</tr>
+<tr>
+<td>Discord</td>
+<td>⭐ 简单</td>
+<td>需要开发者门户配置</td>
+</tr>
+<tr>
+<td>WhatsApp</td>
+<td>⭐⭐ 中等</td>
+<td>需要 QR 码配对</td>
+</tr>
+<tr>
+<td>飞书</td>
+<td>⭐⭐⭐ 较复杂</td>
+<td>国内企业协作平台</td>
+</tr>
+<tr>
+<td>钉钉</td>
+<td>⭐⭐⭐ 较复杂</td>
+<td>国内企业办公平台</td>
+</tr>
+<tr>
+<td>QQ</td>
+<td>⭐⭐⭐ 较复杂</td>
+<td>需要 QQ 开放平台配置</td>
+</tr>
+<tr>
+<td>企业微信</td>
+<td>⭐⭐⭐ 较复杂</td>
+<td>国内企业微信</td>
+</tr>
+</tbody></table>
+<h3 id="4-2-Telegram-配置（最简单的入门渠道）"><a href="#4-2-Telegram-配置（最简单的入门渠道）" class="headerlink" title="4.2 Telegram 配置（最简单的入门渠道）"></a>4.2 Telegram 配置（最简单的入门渠道）</h3><p><strong>步骤 1：在 Telegram 创建机器人</strong></p>
+<ol>
+<li>打开 Telegram，搜索 <code>@BotFather</code></li>
+<li>发送 <code>/newbot</code> 命令</li>
+<li>按照提示输入机器人名称和用户名</li>
+<li>获得 Bot Token（格式：<code>123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11</code>）</li>
+</ol>
+<p><strong>步骤 2：在 OpenClaw 中配置</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 添加 Telegram 频道</span></span><br><span class="line">docker-compose <span class="built_in">exec</span> openclaw-cli openclaw channels add --channel telegram --token <span class="string">&quot;你的BotToken&quot;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>注意</strong>：此命令格式正确，OpenClaw 支持通过 <code>channels add</code> 命令快速添加 Telegram 频道。</p>
+</blockquote>
+<p><strong>步骤 3：验证连接</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看已添加的渠道</span></span><br><span class="line">docker-compose <span class="built_in">exec</span> openclaw-cli openclaw channels list</span><br><span class="line"></span><br><span class="line"><span class="comment"># 重启 Gateway 使配置生效</span></span><br><span class="line">docker-compose restart openclaw-gateway</span><br></pre></td></tr></table></figure>
+
+<p>向你的机器人发送消息，应该会收到回复。</p>
+<h3 id="4-3-Discord-配置"><a href="#4-3-Discord-配置" class="headerlink" title="4.3 Discord 配置"></a>4.3 Discord 配置</h3><p><strong>步骤 1：创建 Discord 应用</strong></p>
+<ol>
+<li>访问 <a target="_blank" rel="noopener" href="https://discord.com/developers/applications">Discord Developer Portal</a></li>
+<li>点击「New Application」，输入应用名称</li>
+<li>左侧菜单点击「Bot」</li>
+<li>点击「Reset Token」获取 Bot Token</li>
+<li>开启「Message Content Intent」</li>
+</ol>
+<p><strong>步骤 2：邀请机器人到服务器</strong></p>
+<ol>
+<li>左侧菜单点击「OAuth2 → URL Generator」</li>
+<li>勾选 <code>bot</code> 权限</li>
+<li>勾选 <code>Send Messages</code>, <code>Read Message History</code></li>
+<li>复制生成的 URL，在浏览器中打开并选择服务器</li>
+</ol>
+<p><strong>步骤 3：在 OpenClaw 中配置</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 添加 Discord 频道</span></span><br><span class="line">docker-compose <span class="built_in">exec</span> openclaw-cli openclaw channels add --channel discord --token <span class="string">&quot;你的BotToken&quot;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>注意</strong>：此命令格式正确，OpenClaw 支持通过 <code>channels add</code> 命令快速添加 Discord 频道。</p>
+</blockquote>
+<h3 id="4-4-WhatsApp-配置"><a href="#4-4-WhatsApp-配置" class="headerlink" title="4.4 WhatsApp 配置"></a>4.4 WhatsApp 配置</h3><p>WhatsApp 需要通过 QR 码进行配对：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 启动 WhatsApp 配对流程</span></span><br><span class="line">docker-compose <span class="built_in">exec</span> openclaw-cli openclaw channels login</span><br><span class="line"></span><br><span class="line"><span class="comment"># 按照终端提示扫描 QR 码</span></span><br><span class="line"><span class="comment"># 配对成功后，凭证会自动保存</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>重要</strong>：WhatsApp 会话文件存储在 <code>~/.openclaw/credentials/whatsapp/</code> 目录，建议通过 volume 持久化。</p>
+<h3 id="4-5-飞书配置（国内重点）"><a href="#4-5-飞书配置（国内重点）" class="headerlink" title="4.5 飞书配置（国内重点）"></a>4.5 飞书配置（国内重点）</h3><p>飞书是国内企业广泛使用的协作平台，以下是详细配置步骤：</p>
+<p><strong>步骤 1：创建飞书自建应用</strong></p>
+<ol>
+<li>访问 <a target="_blank" rel="noopener" href="https://open.feishu.cn/">飞书开放平台</a></li>
+<li>点击「创建应用」，选择「企业自建应用」</li>
+<li>填写应用名称和描述</li>
+</ol>
+<p><strong>步骤 2：获取应用凭证</strong></p>
+<ol>
+<li>点击「凭证与权限」→「应用凭证」</li>
+<li>获取 <code>App ID</code> 和 <code>App Secret</code></li>
+</ol>
+<p><strong>步骤 3：配置机器人能力</strong></p>
+<ol>
+<li>点击「添加应用能力」→「机器人」</li>
+<li>启用机器人功能</li>
+</ol>
+<p><strong>步骤 4：配置事件订阅（关键步骤）</strong></p>
+<ol>
+<li>点击「事件订阅」→「配置」</li>
+<li>点击「添加事件」，选择 <code>im.message.receive_v1</code>（接收消息）</li>
+<li>需要权限：<ul>
+<li><code>im:message:receive_as_bot</code> - 以机器人身份接收消息</li>
+<li><code>im:message:send_as_bot</code> - 发送消息</li>
+<li><code>im:chat:readonly</code> - 读取群组信息</li>
+</ul>
+</li>
+<li>点击「发布」</li>
+</ol>
+<p><strong>步骤 5：在 OpenClaw 中配置</strong></p>
+<p>飞书配置需要使用 <code>openclaw config set</code> 命令，不支持环境变量方式：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入 CLI 容器</span></span><br><span class="line">docker <span class="built_in">exec</span> -it openclaw-cli /bin/bash</span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果使用飞书插件（推荐）</span></span><br><span class="line"><span class="comment"># 配置飞书渠道</span></span><br><span class="line">openclaw config <span class="built_in">set</span> channels.feishu.enabled <span class="literal">true</span></span><br><span class="line">openclaw config <span class="built_in">set</span> channels.feishu.appId <span class="string">&quot;your-app-id&quot;</span></span><br><span class="line">openclaw config <span class="built_in">set</span> channels.feishu.appSecret <span class="string">&quot;your-app-secret&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 或者使用旧版 accounts 格式（兼容）</span></span><br><span class="line">openclaw config <span class="built_in">set</span> <span class="string">&quot;accounts.feishu[0].id&quot;</span> <span class="string">&quot;default&quot;</span></span><br><span class="line">openclaw config <span class="built_in">set</span> <span class="string">&quot;accounts.feishu[0].app_id&quot;</span> <span class="string">&quot;your-app-id&quot;</span></span><br><span class="line">openclaw config <span class="built_in">set</span> <span class="string">&quot;accounts.feishu[0].app_secret&quot;</span> <span class="string">&quot;your-app-secret&quot;</span></span><br><span class="line">openclaw config <span class="built_in">set</span> <span class="string">&quot;channels.feishu.enabled&quot;</span> <span class="literal">true</span></span><br><span class="line">openclaw config <span class="built_in">set</span> <span class="string">&quot;channels.feishu.account&quot;</span> <span class="string">&quot;default&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 退出容器</span></span><br><span class="line"><span class="built_in">exit</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 重启 Gateway 使配置生效</span></span><br><span class="line">docker-compose restart openclaw-gateway</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>注意</strong>：飞书配置的具体路径取决于所使用的插件版本。推荐使用官方文档或插件说明中的最新配置方式。</p>
+</blockquote>
+<p><strong>飞书事件回调 URL</strong>：</p>
+<p>回调地址格式：<code>https://your-domain.com/v1/webhooks/channel/feishu</code></p>
+<blockquote>
+<p><strong>注意</strong>：此回调 URL 格式基于 OpenClaw 标准 webhook 路径。请在飞书开放平台配置「事件回调 URL」，使用公网可访问的地址。如果此格式不适用于您的 OpenClaw 版本，请参考官方文档确认正确的回调路径。</p>
+</blockquote>
+<p>需要在飞书开放平台配置「事件回调 URL」，使用公网可访问的地址。</p>
+<h3 id="4-6-钉钉配置（国内重点）"><a href="#4-6-钉钉配置（国内重点）" class="headerlink" title="4.6 钉钉配置（国内重点）"></a>4.6 钉钉配置（国内重点）</h3><p>钉钉是企业办公平台的另一个主流选择：</p>
+<p><strong>步骤 1：创建钉钉企业内部应用</strong></p>
+<ol>
+<li>登录 <a target="_blank" rel="noopener" href="https://open.dingtalk.com/">钉钉开放平台</a></li>
+<li>点击「应用开发」→「企业内部开发」→「创建应用」</li>
+<li>填写应用信息</li>
+</ol>
+<p><strong>步骤 2：获取凭证</strong></p>
+<ol>
+<li>在应用详情页获取：<ul>
+<li><code>Client ID</code>（AppKey）</li>
+<li><code>Client Secret</code>（AppSecret）</li>
+<li><code>Agent ID</code>（AgentId）</li>
+</ul>
+</li>
+</ol>
+<p><strong>步骤 3：配置消息接收</strong></p>
+<ol>
+<li>点击「消息推送」→「创建消息推送」</li>
+<li>配置「接收消息服务器」的回调 URL</li>
+</ol>
+<p><strong>步骤 4：在 OpenClaw 中配置</strong></p>
+<p>钉钉配置需要使用 <code>openclaw config set</code> 命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入 CLI 容器</span></span><br><span class="line">docker <span class="built_in">exec</span> -it openclaw-cli /bin/bash</span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置钉钉渠道</span></span><br><span class="line">openclaw config <span class="built_in">set</span> <span class="string">&quot;channels.dingtalk.enabled&quot;</span> <span class="literal">true</span></span><br><span class="line">openclaw config <span class="built_in">set</span> <span class="string">&quot;channels.dingtalk.clientId&quot;</span> <span class="string">&quot;your-app-key&quot;</span></span><br><span class="line">openclaw config <span class="built_in">set</span> <span class="string">&quot;channels.dingtalk.clientSecret&quot;</span> <span class="string">&quot;your-app-secret&quot;</span></span><br><span class="line"><span class="comment"># 可选配置</span></span><br><span class="line">openclaw config <span class="built_in">set</span> <span class="string">&quot;channels.dingtalk.agentId&quot;</span> <span class="string">&quot;your-agent-id&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 退出容器</span></span><br><span class="line"><span class="built_in">exit</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 重启 Gateway 使配置生效</span></span><br><span class="line">docker-compose restart openclaw-gateway</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-7-QQ-机器人配置（国内重点）"><a href="#4-7-QQ-机器人配置（国内重点）" class="headerlink" title="4.7 QQ 机器人配置（国内重点）"></a>4.7 QQ 机器人配置（国内重点）</h3><p><strong>步骤 1：创建 QQ 机器人应用</strong></p>
+<ol>
+<li>访问 <a target="_blank" rel="noopener" href="https://q.qq.com/">QQ 开放平台</a></li>
+<li>点击「创建应用」→「机器人」</li>
+<li>填写应用信息</li>
+</ol>
+<p><strong>步骤 2：获取应用凭证</strong></p>
+<p>获取 <code>App ID</code> 和 <code>App Secret</code></p>
+<p><strong>步骤 3：配置 IP 白名单</strong></p>
+<p>在开放平台配置服务器的公网 IP 到白名单</p>
+<p><strong>步骤 4：在 OpenClaw 中配置</strong></p>
+<p>QQ 配置需要使用 <code>openclaw config set</code> 命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入 CLI 容器</span></span><br><span class="line">docker <span class="built_in">exec</span> -it openclaw-cli /bin/bash</span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置 QQ 渠道</span></span><br><span class="line">openclaw config <span class="built_in">set</span> channels.qqbot.enabled <span class="literal">true</span></span><br><span class="line">openclaw config <span class="built_in">set</span> channels.qqbot.appId <span class="string">&quot;your-app-id&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 部分插件可能需要 AppID:AppSecret 格式的 token</span></span><br><span class="line"><span class="comment"># openclaw channels add --channel qqbot --token &quot;your-app-id:your-app-secret&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 退出容器</span></span><br><span class="line"><span class="built_in">exit</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 重启 Gateway 使配置生效</span></span><br><span class="line">docker-compose restart openclaw-gateway</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>注意</strong>：QQ 机器人的配置方式可能因插件版本而异，部分插件使用 <code>appId</code> 字段，部分使用 token 格式。请参考所使用的 QQ 插件的具体文档。</p>
+</blockquote>
+<h3 id="4-8-企业微信配置"><a href="#4-8-企业微信配置" class="headerlink" title="4.8 企业微信配置"></a>4.8 企业微信配置</h3><p><strong>步骤 1：创建企业微信自建应用</strong></p>
+<ol>
+<li>登录 <a target="_blank" rel="noopener" href="https://work.weixin.qq.com/">企业微信管理后台</a></li>
+<li>进入「应用管理」→「创建应用」</li>
+<li>上传应用 logo 和填写信息</li>
+</ol>
+<p><strong>步骤 2：获取凭证</strong></p>
+<p>获取以下信息：</p>
+<ul>
+<li><code>CorpID</code>（企业 ID）：在我的企业页面获取</li>
+<li><code>Secret</code>（应用 Secret）：在应用详情页获取</li>
+<li><code>AgentID</code>（应用 ID）：在应用详情页获取</li>
+</ul>
+<p><strong>步骤 3：配置接收消息</strong></p>
+<ol>
+<li>在应用详情页点击「设置 API 接收」</li>
+<li>配置回调 URL、Token 和 EncodingAESKey</li>
+</ol>
+<p><strong>步骤 4：在 OpenClaw 中配置</strong></p>
+<p>企业微信配置需要使用 <code>openclaw config set</code> 命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入 CLI 容器</span></span><br><span class="line">docker <span class="built_in">exec</span> -it openclaw-cli /bin/bash</span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置企业微信渠道（使用 wecom 通道名）</span></span><br><span class="line">openclaw config <span class="built_in">set</span> channels.wecom.enabled <span class="literal">true</span></span><br><span class="line">openclaw config <span class="built_in">set</span> channels.wecom.corpId <span class="string">&quot;your-corp-id&quot;</span></span><br><span class="line">openclaw config <span class="built_in">set</span> channels.wecom.corpSecret <span class="string">&quot;your-secret&quot;</span></span><br><span class="line">openclaw config <span class="built_in">set</span> channels.wecom.agentId <span class="string">&quot;your-agent-id&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 可选：配置 Token 和 EncodingAESKey</span></span><br><span class="line">openclaw config <span class="built_in">set</span> channels.wecom.token <span class="string">&quot;your-token&quot;</span></span><br><span class="line">openclaw config <span class="built_in">set</span> channels.wecom.encodingAesKey <span class="string">&quot;your-encoding-key&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 或者使用 wxwork 通道名（取决于插件版本）</span></span><br><span class="line"><span class="comment"># openclaw config set channels.wxwork.enabled true</span></span><br><span class="line"><span class="comment"># openclaw config set channels.wxwork.corpId &quot;your-corp-id&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 退出容器</span></span><br><span class="line"><span class="built_in">exit</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 重启 Gateway 使配置生效</span></span><br><span class="line">docker-compose restart openclaw-gateway</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>注意</strong>：企业微信的通道名称取决于所使用的插件，<code>wecom</code> 和 <code>wxwork</code> 都是常见的通道名。请根据实际使用的插件选择正确的配置路径。</p>
+</blockquote>
+<h3 id="4-9-多平台同时运行"><a href="#4-9-多平台同时运行" class="headerlink" title="4.9 多平台同时运行"></a>4.9 多平台同时运行</h3><p>OpenClaw 支持多个渠道同时运行。每个渠道需要单独配置：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入 CLI 容器</span></span><br><span class="line">docker <span class="built_in">exec</span> -it openclaw-cli /bin/bash</span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置 Telegram</span></span><br><span class="line">openclaw channels add --channel telegram --token <span class="string">&quot;xxx&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置 Discord</span></span><br><span class="line">openclaw channels add --channel discord --token <span class="string">&quot;xxx&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置飞书（推荐方式）</span></span><br><span class="line">openclaw config <span class="built_in">set</span> channels.feishu.enabled <span class="literal">true</span></span><br><span class="line">openclaw config <span class="built_in">set</span> channels.feishu.appId <span class="string">&quot;xxx&quot;</span></span><br><span class="line">openclaw config <span class="built_in">set</span> channels.feishu.appSecret <span class="string">&quot;xxx&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置钉钉</span></span><br><span class="line">openclaw config <span class="built_in">set</span> channels.dingtalk.enabled <span class="literal">true</span></span><br><span class="line">openclaw config <span class="built_in">set</span> channels.dingtalk.clientId <span class="string">&quot;xxx&quot;</span></span><br><span class="line">openclaw config <span class="built_in">set</span> channels.dingtalk.clientSecret <span class="string">&quot;xxx&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置 QQ</span></span><br><span class="line">openclaw config <span class="built_in">set</span> channels.qqbot.enabled <span class="literal">true</span></span><br><span class="line">openclaw config <span class="built_in">set</span> channels.qqbot.appId <span class="string">&quot;xxx&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置企业微信</span></span><br><span class="line">openclaw config <span class="built_in">set</span> channels.wecom.enabled <span class="literal">true</span></span><br><span class="line">openclaw config <span class="built_in">set</span> channels.wecom.corpId <span class="string">&quot;xxx&quot;</span></span><br><span class="line">openclaw config <span class="built_in">set</span> channels.wecom.corpSecret <span class="string">&quot;xxx&quot;</span></span><br><span class="line">openclaw config <span class="built_in">set</span> channels.wecom.agentId <span class="string">&quot;xxx&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 退出容器</span></span><br><span class="line"><span class="built_in">exit</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 重启 Gateway 使所有配置生效</span></span><br><span class="line">docker-compose restart openclaw-gateway</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>注意</strong>：具体配置路径可能因插件版本而异。如果遇到配置不生效的情况，请参考所用插件的官方文档。</p>
+</blockquote>
+<h2 id="第五部分：AI-模型配置"><a href="#第五部分：AI-模型配置" class="headerlink" title="第五部分：AI 模型配置"></a>第五部分：AI 模型配置</h2><h3 id="5-1-支持的模型提供商"><a href="#5-1-支持的模型提供商" class="headerlink" title="5.1 支持的模型提供商"></a>5.1 支持的模型提供商</h3><p>OpenClaw 支持众多模型提供商：</p>
+<table>
+<thead>
+<tr>
+<th>提供商</th>
+<th>代表模型</th>
+<th>配置难度</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>OpenAI</td>
+<td>GPT-4o, GPT-4</td>
+<td>⭐ 简单</td>
+</tr>
+<tr>
+<td>Anthropic</td>
+<td>Claude 4</td>
+<td>⭐ 简单</td>
+</tr>
+<tr>
+<td>智谱 GLM</td>
+<td>GLM-4</td>
+<td>⭐⭐ 中等</td>
+</tr>
+<tr>
+<td>Moonshot</td>
+<td>Kimi</td>
+<td>⭐⭐ 中等</td>
+</tr>
+<tr>
+<td>阿里 Qwen</td>
+<td>Qwen2.5</td>
+<td>⭐⭐ 中等</td>
+</tr>
+<tr>
+<td>MiniMax</td>
+<td>abab6.5s</td>
+<td>⭐⭐ 中等</td>
+</tr>
+<tr>
+<td>Ollama</td>
+<td>本地模型</td>
+<td>⭐ 简单</td>
+</tr>
+</tbody></table>
+<h3 id="5-2-OpenAI-配置"><a href="#5-2-OpenAI-配置" class="headerlink" title="5.2 OpenAI 配置"></a>5.2 OpenAI 配置</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># .env 文件</span></span><br><span class="line">OPENAI_API_KEY=sk-xxx</span><br><span class="line">OPENAI_MODEL=gpt-4o</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>配置优先级说明</strong>：OpenClaw 支持通过环境变量或配置文件设置模型参数。环境变量配置简单直接，适合快速部署；配置文件更灵活，适合复杂场景。</p>
+</blockquote>
+<p>或通过 CLI 配置：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker-compose <span class="built_in">exec</span> openclaw-cli openclaw config <span class="built_in">set</span> models.defaults.providers.openai.apiKey <span class="string">&quot;sk-xxx&quot;</span></span><br><span class="line">docker-compose <span class="built_in">exec</span> openclaw-cli openclaw config <span class="built_in">set</span> models.defaults.providers.openai.model <span class="string">&quot;gpt-4o&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="5-3-Claude-配置"><a href="#5-3-Claude-配置" class="headerlink" title="5.3 Claude 配置"></a>5.3 Claude 配置</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># .env 文件</span></span><br><span class="line">ANTHROPIC_API_KEY=sk-ant-xxx</span><br><span class="line">ANTHROPIC_MODEL=claude-opus-4-6-thinking</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-4-国内模型配置"><a href="#5-4-国内模型配置" class="headerlink" title="5.4 国内模型配置"></a>5.4 国内模型配置</h3><p><strong>智谱 GLM</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># .env 文件</span></span><br><span class="line">ZHIPU_API_KEY=xxx</span><br></pre></td></tr></table></figure>
+
+<p>**Moonshot (Kimi)**：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># .env 文件</span></span><br><span class="line">MOONSHOT_API_KEY=xxx</span><br></pre></td></tr></table></figure>
+
+<p><strong>阿里 Qwen</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># .env 文件</span></span><br><span class="line">DASHSCOPE_API_KEY=xxx</span><br></pre></td></tr></table></figure>
+
+<p><strong>MiniMax</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># .env 文件</span></span><br><span class="line">MINIMAX_API_KEY=xxx</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-5-Ollama-本地模型"><a href="#5-5-Ollama-本地模型" class="headerlink" title="5.5 Ollama 本地模型"></a>5.5 Ollama 本地模型</h3><p>如果需要完全本地化的 AI 能力，可以使用 Ollama：</p>
+<p><strong>步骤 1：安装 Ollama</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装 Ollama</span></span><br><span class="line">curl -fsSL https://ollama.com/install.sh | bash</span><br><span class="line"></span><br><span class="line"><span class="comment"># 拉取模型</span></span><br><span class="line">ollama pull qwen2.5:7b</span><br></pre></td></tr></table></figure>
+
+<p><strong>步骤 2：配置 OpenClaw 使用 Ollama</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># .env 文件</span></span><br><span class="line">OLLAMA_HOST=http://localhost:11434</span><br><span class="line">OLLAMA_MODEL=qwen2.5:7b</span><br></pre></td></tr></table></figure>
+
+<p>或者通过 config 配置：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;models&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;providers&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;ollama&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;apiBaseUrl&quot;</span><span class="punctuation">:</span> <span class="string">&quot;http://host.docker.internal:11434&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;model&quot;</span><span class="punctuation">:</span> <span class="string">&quot;qwen2.5:7b&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="5-6-模型故障转移"><a href="#5-6-模型故障转移" class="headerlink" title="5.6 模型故障转移"></a>5.6 模型故障转移</h3><p>配置多个模型作为备份，确保服务连续性：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;models&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;defaults&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;failover&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;providers&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;openai&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">          <span class="attr">&quot;apiKey&quot;</span><span class="punctuation">:</span> <span class="string">&quot;sk-xxx&quot;</span><span class="punctuation">,</span></span><br><span class="line">          <span class="attr">&quot;model&quot;</span><span class="punctuation">:</span> <span class="string">&quot;gpt-4o&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;anthropic&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">          <span class="attr">&quot;apiKey&quot;</span><span class="punctuation">:</span> <span class="string">&quot;sk-ant-xxx&quot;</span><span class="punctuation">,</span></span><br><span class="line">          <span class="attr">&quot;model&quot;</span><span class="punctuation">:</span> <span class="string">&quot;claude-opus-4-6-thinking&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;zhipu&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">          <span class="attr">&quot;apiKey&quot;</span><span class="punctuation">:</span> <span class="string">&quot;xxx&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>当主模型不可用时，OpenClaw 会自动切换到备用模型。</p>
+<h2 id="第六部分：安全加固"><a href="#第六部分：安全加固" class="headerlink" title="第六部分：安全加固"></a>第六部分：安全加固</h2><h3 id="6-1-认证配置"><a href="#6-1-认证配置" class="headerlink" title="6.1 认证配置"></a>6.1 认证配置</h3><p>OpenClaw 支持多种认证模式：</p>
+<p><strong>Token 认证（推荐）</strong>：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;gateway&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;auth&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;mode&quot;</span><span class="punctuation">:</span> <span class="string">&quot;token&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;token&quot;</span><span class="punctuation">:</span> <span class="string">&quot;your-long-random-token&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>密码认证</strong>：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;gateway&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;auth&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;mode&quot;</span><span class="punctuation">:</span> <span class="string">&quot;password&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;password&quot;</span><span class="punctuation">:</span> <span class="string">&quot;your-password&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>通过环境变量配置：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">OPENCLAW_GATEWAY_PASSWORD=your-password</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-2-网络隔离"><a href="#6-2-网络隔离" class="headerlink" title="6.2 网络隔离"></a>6.2 网络隔离</h3><p><strong>绑定模式配置</strong>：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;gateway&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;bind&quot;</span><span class="punctuation">:</span> <span class="string">&quot;loopback&quot;</span><span class="punctuation">,</span>  <span class="comment">// 仅本地访问</span></span><br><span class="line">    <span class="attr">&quot;mode&quot;</span><span class="punctuation">:</span> <span class="string">&quot;local&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>可选值：</p>
+<ul>
+<li><code>loopback</code>：仅本地（127.0.0.1），最安全</li>
+<li><code>lan</code>：局域网可访问</li>
+<li><code>tailnet</code>：Tailscale 网络访问</li>
+<li><code>custom</code>：自定义绑定地址</li>
+</ul>
+<p><strong>防火墙配置</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用 UFW 防火墙（Debian/Ubuntu）</span></span><br><span class="line"><span class="built_in">sudo</span> ufw allow 18789/tcp</span><br><span class="line"><span class="built_in">sudo</span> ufw <span class="built_in">enable</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="6-3-沙箱隔离"><a href="#6-3-沙箱隔离" class="headerlink" title="6.3 沙箱隔离"></a>6.3 沙箱隔离</h3><p>启用沙箱可以将 Agent 的工具执行隔离在独立容器中：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;agents&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;defaults&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;sandbox&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;mode&quot;</span><span class="punctuation">:</span> <span class="string">&quot;non-main&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;scope&quot;</span><span class="punctuation">:</span> <span class="string">&quot;agent&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;docker&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">          <span class="attr">&quot;image&quot;</span><span class="punctuation">:</span> <span class="string">&quot;openclaw-sandbox:bookworm-slim&quot;</span><span class="punctuation">,</span></span><br><span class="line">          <span class="attr">&quot;network&quot;</span><span class="punctuation">:</span> <span class="string">&quot;none&quot;</span><span class="punctuation">,</span></span><br><span class="line">          <span class="attr">&quot;memory&quot;</span><span class="punctuation">:</span> <span class="string">&quot;1g&quot;</span><span class="punctuation">,</span></span><br><span class="line">          <span class="attr">&quot;memorySwap&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2g&quot;</span><span class="punctuation">,</span></span><br><span class="line">          <span class="attr">&quot;user&quot;</span><span class="punctuation">:</span> <span class="string">&quot;1000:1000&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>配置说明</strong>：</p>
+<ul>
+<li><code>mode: non-main</code>：非主会话启用沙箱</li>
+<li><code>scope: agent</code>：每个 Agent 独立容器</li>
+<li><code>network: none</code>：禁用网络，安全性最高</li>
+</ul>
+<h3 id="6-4-工具策略"><a href="#6-4-工具策略" class="headerlink" title="6.4 工具策略"></a>6.4 工具策略</h3><p>配置工具的使用策略：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;tools&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;profile&quot;</span><span class="punctuation">:</span> <span class="string">&quot;messaging&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;deny&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">      <span class="string">&quot;group:automation&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="string">&quot;group:runtime&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="string">&quot;group:fs&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="string">&quot;sessions_spawn&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="string">&quot;sessions_send&quot;</span></span><br><span class="line">    <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;fs&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;workspaceOnly&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;exec&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;security&quot;</span><span class="punctuation">:</span> <span class="string">&quot;deny&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;ask&quot;</span><span class="punctuation">:</span> <span class="string">&quot;always&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;elevated&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;enabled&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="6-5-安全审计"><a href="#6-5-安全审计" class="headerlink" title="6.5 安全审计"></a>6.5 安全审计</h3><p>使用内置安全审计工具：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 运行安全审计</span></span><br><span class="line">docker-compose <span class="built_in">exec</span> openclaw-cli openclaw security audit</span><br><span class="line"></span><br><span class="line"><span class="comment"># 深度审计（包含网络探测）</span></span><br><span class="line">docker-compose <span class="built_in">exec</span> openclaw-cli openclaw security audit --deep</span><br><span class="line"></span><br><span class="line"><span class="comment"># 自动修复建议的问题</span></span><br><span class="line">docker-compose <span class="built_in">exec</span> openclaw-cli openclaw security audit --fix</span><br><span class="line"></span><br><span class="line"><span class="comment"># JSON 格式输出（适合程序处理）</span></span><br><span class="line">docker-compose <span class="built_in">exec</span> openclaw-cli openclaw security audit --json</span><br></pre></td></tr></table></figure>
+
+<h2 id="第七部分：生产环境"><a href="#第七部分：生产环境" class="headerlink" title="第七部分：生产环境"></a>第七部分：生产环境</h2><h3 id="7-1-Nginx-反向代理"><a href="#7-1-Nginx-反向代理" class="headerlink" title="7.1 Nginx 反向代理"></a>7.1 Nginx 反向代理</h3><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">listen</span> <span class="number">443</span> ssl http2;</span><br><span class="line">    <span class="attribute">server_name</span> openclaw.your-domain.com;</span><br><span class="line">    </span><br><span class="line">    <span class="attribute">ssl_certificate</span> /path/to/cert.pem;</span><br><span class="line">    <span class="attribute">ssl_certificate_key</span> /path/to/key.pem;</span><br><span class="line">    </span><br><span class="line">    <span class="attribute">client_max_body_size</span> <span class="number">100M</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="section">location</span> / &#123;</span><br><span class="line">        <span class="attribute">proxy_pass</span> http://127.0.0.1:18789;</span><br><span class="line">        <span class="attribute">proxy_http_version</span> <span class="number">1</span>.<span class="number">1</span>;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> Host <span class="variable">$host</span>;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> X-Real-IP <span class="variable">$remote_addr</span>;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> X-Forwarded-For <span class="variable">$proxy_add_x_forwarded_for</span>;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> X-Forwarded-Proto <span class="variable">$scheme</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="attribute">proxy_set_header</span> Upgrade <span class="variable">$http_upgrade</span>;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> Connection <span class="string">&quot;upgrade&quot;</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># LLM 长响应超时配置</span></span><br><span class="line">        <span class="attribute">proxy_connect_timeout</span> <span class="number">60s</span>;</span><br><span class="line">        <span class="attribute">proxy_send_timeout</span> <span class="number">300s</span>;</span><br><span class="line">        <span class="attribute">proxy_read_timeout</span> <span class="number">300s</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># WebSocket 支持</span></span><br><span class="line">        <span class="attribute">proxy_read_timeout</span> <span class="number">86400s</span>;</span><br><span class="line">        <span class="attribute">proxy_send_timeout</span> <span class="number">86400s</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># HTTP 重定向到 HTTPS</span></span><br><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">listen</span> <span class="number">80</span>;</span><br><span class="line">    <span class="attribute">server_name</span> openclaw.your-domain.com;</span><br><span class="line">    <span class="attribute">return</span> <span class="number">301</span> https://<span class="variable">$server_name</span><span class="variable">$request_uri</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="7-2-HTTPS-配置"><a href="#7-2-HTTPS-配置" class="headerlink" title="7.2 HTTPS 配置"></a>7.2 HTTPS 配置</h3><p><strong>方式一：使用 Let’s Encrypt（免费）</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装 Certbot</span></span><br><span class="line"><span class="built_in">sudo</span> apt install certbot python3-certbot-nginx</span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取证书（需要域名已解析到此服务器）</span></span><br><span class="line"><span class="built_in">sudo</span> certbot --nginx -d openclaw.your-domain.com</span><br><span class="line"></span><br><span class="line"><span class="comment"># 自动续期测试</span></span><br><span class="line"><span class="built_in">sudo</span> certbot renew --dry-run</span><br></pre></td></tr></table></figure>
+
+<p><strong>方式二：使用已有证书</strong></p>
+<p>将证书文件复制到服务器：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建证书目录</span></span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">mkdir</span> -p /etc/nginx/ssl</span><br><span class="line"></span><br><span class="line"><span class="comment"># 复制证书</span></span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">cp</span> your-cert.pem /etc/nginx/ssl/</span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">cp</span> your-key.pem /etc/nginx/ssl/</span><br></pre></td></tr></table></figure>
+
+<h3 id="7-3-健康检查"><a href="#7-3-健康检查" class="headerlink" title="7.3 健康检查"></a>7.3 健康检查</h3><p>OpenClaw 提供多个健康检查端点：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 基础存活检查</span></span><br><span class="line">curl -f http://127.0.0.1:18789/healthz</span><br><span class="line"></span><br><span class="line"><span class="comment"># 就绪检查（包含渠道状态）</span></span><br><span class="line">curl -f http://127.0.0.1:18789/readyz</span><br><span class="line"></span><br><span class="line"><span class="comment"># 详细健康状态（需要认证）</span></span><br><span class="line">curl -H <span class="string">&quot;Authorization: Bearer <span class="variable">$OPENCLAW_GATEWAY_TOKEN</span>&quot;</span> \</span><br><span class="line">  http://127.0.0.1:18789/v1/health</span><br></pre></td></tr></table></figure>
+
+<p>Docker Compose 已内置 healthcheck，会自动检查 <code>/healthz</code> 端点。</p>
+<h3 id="7-4-日志管理"><a href="#7-4-日志管理" class="headerlink" title="7.4 日志管理"></a>7.4 日志管理</h3><p><strong>查看日志</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看所有日志</span></span><br><span class="line">docker-compose logs -f</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看 Gateway 日志</span></span><br><span class="line">docker-compose logs -f openclaw-gateway</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看最近 100 行</span></span><br><span class="line">docker-compose logs --<span class="built_in">tail</span>=100</span><br></pre></td></tr></table></figure>
+
+<p><strong>日志级别配置</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># .env 文件</span></span><br><span class="line">OPENCLAW_LOG_LEVEL=debug</span><br></pre></td></tr></table></figure>
+
+<p>可选值：<code>trace</code>, <code>debug</code>, <code>info</code>, <code>warn</code>, <code>error</code></p>
+<p><strong>日志轮转</strong>：</p>
+<p>Docker 自动处理日志轮转，但建议配置日志大小限制。在 <code>docker-compose.yml</code> 中添加：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">logging:</span></span><br><span class="line">  <span class="attr">driver:</span> <span class="string">&quot;json-file&quot;</span></span><br><span class="line">  <span class="attr">options:</span></span><br><span class="line">    <span class="attr">max-size:</span> <span class="string">&quot;10m&quot;</span></span><br><span class="line">    <span class="attr">max-file:</span> <span class="string">&quot;3&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="7-5-备份与恢复"><a href="#7-5-备份与恢复" class="headerlink" title="7.5 备份与恢复"></a>7.5 备份与恢复</h3><p><strong>需要备份的内容</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 备份脚本</span></span><br><span class="line"><span class="comment">#!/bin/bash</span></span><br><span class="line">BACKUP_DIR=<span class="string">&quot;/opt/openclaw-backup&quot;</span></span><br><span class="line">DATE=$(<span class="built_in">date</span> +%Y%m%d)</span><br><span class="line"></span><br><span class="line"><span class="built_in">mkdir</span> -p <span class="variable">$BACKUP_DIR</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 备份配置和数据</span></span><br><span class="line">tar -czvf <span class="variable">$BACKUP_DIR</span>/openclaw-<span class="variable">$DATE</span>.tar.gz \</span><br><span class="line">    /opt/openclaw/config \</span><br><span class="line">    /opt/openclaw/data</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Backup completed: <span class="variable">$BACKUP_DIR</span>/openclaw-<span class="variable">$DATE</span>.tar.gz&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>恢复步骤</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 停止服务</span></span><br><span class="line">docker-compose down</span><br><span class="line"></span><br><span class="line"><span class="comment"># 解压备份</span></span><br><span class="line">tar -xzvf openclaw-20240101.tar.gz -C /opt/openclaw</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动服务</span></span><br><span class="line">docker-compose up -d</span><br></pre></td></tr></table></figure>
+
+<h3 id="7-6-版本升级"><a href="#7-6-版本升级" class="headerlink" title="7.6 版本升级"></a>7.6 版本升级</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 拉取最新镜像</span></span><br><span class="line">docker-compose pull</span><br><span class="line"></span><br><span class="line"><span class="comment"># 重启服务</span></span><br><span class="line">docker-compose down</span><br><span class="line">docker-compose up -d</span><br><span class="line"></span><br><span class="line"><span class="comment"># 验证版本</span></span><br><span class="line">docker-compose <span class="built_in">exec</span> openclaw-gateway node dist/index.js --version</span><br></pre></td></tr></table></figure>
+
+<h2 id="第八部分：运维与故障排查"><a href="#第八部分：运维与故障排查" class="headerlink" title="第八部分：运维与故障排查"></a>第八部分：运维与故障排查</h2><h3 id="8-1-常用命令"><a href="#8-1-常用命令" class="headerlink" title="8.1 常用命令"></a>8.1 常用命令</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 启动服务</span></span><br><span class="line">docker-compose up -d</span><br><span class="line"></span><br><span class="line"><span class="comment"># 停止服务</span></span><br><span class="line">docker-compose down</span><br><span class="line"></span><br><span class="line"><span class="comment"># 重启服务</span></span><br><span class="line">docker-compose restart</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看日志</span></span><br><span class="line">docker-compose logs -f</span><br><span class="line"></span><br><span class="line"><span class="comment"># 进入容器</span></span><br><span class="line">docker <span class="built_in">exec</span> -it openclaw-gateway /bin/bash</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看资源使用</span></span><br><span class="line">docker stats openclaw-gateway</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看容器信息</span></span><br><span class="line">docker inspect openclaw-gateway</span><br></pre></td></tr></table></figure>
+
+<h3 id="8-2-常见问题"><a href="#8-2-常见问题" class="headerlink" title="8.2 常见问题"></a>8.2 常见问题</h3><p><strong>Q：容器启动失败，日志显示权限错误</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 修复权限</span></span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">chown</span> -R 1000:1000 /opt/openclaw/config /opt/openclaw/data</span><br></pre></td></tr></table></figure>
+
+<p><strong>Q：消息收不到</strong></p>
+<ol>
+<li>检查渠道配置是否正确</li>
+<li>确认回调 URL 是否可公网访问</li>
+<li>查看渠道日志：<code>docker-compose logs openclaw-gateway | grep -i telegram</code></li>
+</ol>
+<p><strong>Q：API 调用失败</strong></p>
+<ol>
+<li>检查 API Key 是否正确</li>
+<li>确认模型名称是否有效</li>
+<li>查看详细错误日志</li>
+</ol>
+<p><strong>Q：WebSocket 连接失败</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 检查端口是否开放</span></span><br><span class="line">netstat -tlnp | grep 18789</span><br><span class="line"></span><br><span class="line"><span class="comment"># 检查防火墙</span></span><br><span class="line"><span class="built_in">sudo</span> ufw status</span><br></pre></td></tr></table></figure>
+
+<h3 id="8-3-诊断工具"><a href="#8-3-诊断工具" class="headerlink" title="8.3 诊断工具"></a>8.3 诊断工具</h3><p>OpenClaw 内置诊断工具：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 系统诊断</span></span><br><span class="line">docker-compose <span class="built_in">exec</span> openclaw-cli openclaw doctor</span><br><span class="line"></span><br><span class="line"><span class="comment"># 检查 Gateway 状态</span></span><br><span class="line">docker-compose <span class="built_in">exec</span> openclaw-cli openclaw gateway status</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看已连接设备</span></span><br><span class="line">docker-compose <span class="built_in">exec</span> openclaw-cli openclaw devices list</span><br><span class="line"></span><br><span class="line"><span class="comment"># 检查配置</span></span><br><span class="line">docker-compose <span class="built_in">exec</span> openclaw-cli openclaw config get</span><br></pre></td></tr></table></figure>
+
+<h2 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h2><h3 id="A-完整配置示例"><a href="#A-完整配置示例" class="headerlink" title="A. 完整配置示例"></a>A. 完整配置示例</h3><p><strong>docker-compose.yml</strong>：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">&#x27;3.8&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">openclaw-gateway:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">ghcr.io/openclaw/openclaw:latest</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">openclaw-gateway</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">unless-stopped</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;18789:18789&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;18790:18790&quot;</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./data:/home/node</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./config:/home/node/.openclaw</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">OPENCLAW_GATEWAY_TOKEN=$&#123;OPENCLAW_GATEWAY_TOKEN&#125;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">OPENCLAW_GATEWAY_PORT=18789</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">TZ=$&#123;TZ:-Asia/Shanghai&#125;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">OPENCLAW_LOG_LEVEL=info</span></span><br><span class="line">    <span class="attr">healthcheck:</span></span><br><span class="line">      <span class="attr">test:</span> [<span class="string">&quot;CMD&quot;</span>, <span class="string">&quot;curl&quot;</span>, <span class="string">&quot;-f&quot;</span>, <span class="string">&quot;http://127.0.0.1:18789/healthz&quot;</span>]</span><br><span class="line">      <span class="attr">interval:</span> <span class="string">30s</span></span><br><span class="line">      <span class="attr">timeout:</span> <span class="string">10s</span></span><br><span class="line">      <span class="attr">retries:</span> <span class="number">3</span></span><br><span class="line">      <span class="attr">start_period:</span> <span class="string">60s</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">openclaw-cli:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">ghcr.io/openclaw/openclaw:latest</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">openclaw-cli</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">&quot;no&quot;</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./data:/home/node</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./config:/home/node/.openclaw</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">OPENCLAW_GATEWAY_TOKEN=$&#123;OPENCLAW_GATEWAY_TOKEN&#125;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">TZ=$&#123;TZ:-Asia/Shanghai&#125;</span></span><br><span class="line">    <span class="attr">network_mode:</span> <span class="string">service:openclaw-gateway</span></span><br><span class="line">    <span class="attr">depends_on:</span></span><br><span class="line">      <span class="attr">openclaw-gateway:</span></span><br><span class="line">        <span class="attr">condition:</span> <span class="string">service_healthy</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>版本要求</strong>：<code>depends_on</code> 的 <code>condition</code> 语法需要 Docker Compose v2.1+。请确保您的 Docker Compose 版本满足要求。</p>
+</blockquote>
+<p><strong>.env 示例</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 必填配置</span></span><br><span class="line">OPENCLAW_GATEWAY_TOKEN=your-64-character-hex-token-here</span><br><span class="line"></span><br><span class="line"><span class="comment"># 端口配置</span></span><br><span class="line">OPENCLAW_GATEWAY_PORT=18789</span><br><span class="line">OPENCLAW_BRIDGE_PORT=18790</span><br><span class="line"></span><br><span class="line"><span class="comment"># 时区</span></span><br><span class="line">TZ=Asia/Shanghai</span><br><span class="line"></span><br><span class="line"><span class="comment"># 日志级别</span></span><br><span class="line">OPENCLAW_LOG_LEVEL=info</span><br><span class="line"></span><br><span class="line"><span class="comment"># OpenAI 配置</span></span><br><span class="line">OPENAI_API_KEY=sk-your-openai-key</span><br><span class="line">OPENAI_MODEL=gpt-4o</span><br><span class="line"></span><br><span class="line"><span class="comment"># 渠道配置说明：Telegram/Discord使用 openclaw channels add 命令，其他渠道使用 openclaw config set 命令</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="B-环境变量速查表"><a href="#B-环境变量速查表" class="headerlink" title="B. 环境变量速查表"></a>B. 环境变量速查表</h3><p><strong>Gateway 核心配置</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>变量名</th>
+<th>说明</th>
+<th>示例值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>OPENCLAW_GATEWAY_TOKEN</code></td>
+<td>Gateway 认证令牌</td>
+<td>64位随机字符串</td>
+</tr>
+<tr>
+<td><code>OPENCLAW_GATEWAY_PORT</code></td>
+<td>Gateway 端口</td>
+<td>18789</td>
+</tr>
+<tr>
+<td><code>OPENCLAW_GATEWAY_BIND</code></td>
+<td>绑定模式</td>
+<td>loopback&#x2F;lan&#x2F;tailnet</td>
+</tr>
+<tr>
+<td><code>OPENCLAW_LOG_LEVEL</code></td>
+<td>日志级别</td>
+<td>debug&#x2F;info&#x2F;warn&#x2F;error</td>
+</tr>
+<tr>
+<td><code>OPENCLAW_HOME_VOLUME</code></td>
+<td>数据持久化卷名</td>
+<td>openclaw_home</td>
+</tr>
+<tr>
+<td><code>OPENCLAW_SANDBOX</code></td>
+<td>启用沙箱</td>
+<td>1&#x2F;true&#x2F;yes&#x2F;on</td>
+</tr>
+<tr>
+<td><code>TZ</code></td>
+<td>时区</td>
+<td>Asia&#x2F;Shanghai</td>
+</tr>
+</tbody></table>
+<p><strong>AI 模型配置</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>变量名</th>
+<th>说明</th>
+<th>示例值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>OPENAI_API_KEY</code></td>
+<td>OpenAI API Key</td>
+<td>sk-xxx</td>
+</tr>
+<tr>
+<td><code>ANTHROPIC_API_KEY</code></td>
+<td>Anthropic API Key</td>
+<td>sk-ant-xxx</td>
+</tr>
+<tr>
+<td><code>ZHIPU_API_KEY</code></td>
+<td>智谱 API Key</td>
+<td>xxx</td>
+</tr>
+<tr>
+<td><code>MOONSHOT_API_KEY</code></td>
+<td>Moonshot API Key</td>
+<td>xxx</td>
+</tr>
+<tr>
+<td><code>DASHSCOPE_API_KEY</code></td>
+<td>阿里 DashScope API Key</td>
+<td>xxx</td>
+</tr>
+<tr>
+<td><code>OLLAMA_HOST</code></td>
+<td>Ollama 服务地址</td>
+<td><a target="_blank" rel="noopener" href="http://localhost:11434/">http://localhost:11434</a></td>
+</tr>
+<tr>
+<td><code>OLLAMA_MODEL</code></td>
+<td>Ollama 模型名称</td>
+<td>qwen2.5:7b</td>
+</tr>
+</tbody></table>
+<p><strong>渠道配置说明</strong>：</p>
+<blockquote>
+<p>注意：以下渠道不支持环境变量配置，必须使用 <code>openclaw config set</code> 或 <code>openclaw channels add</code> 命令配置：</p>
+<ul>
+<li>Telegram：使用 <code>openclaw channels add --channel telegram --token &quot;xxx&quot;</code></li>
+<li>Discord：使用 <code>openclaw channels add --channel discord --token &quot;xxx&quot;</code></li>
+<li>WhatsApp：使用 <code>openclaw channels login</code>（QR 码配对）</li>
+<li>飞书：使用 <code>openclaw config set</code> 命令配置 accounts 和 channels</li>
+<li>钉钉：使用 <code>openclaw config set</code> 命令配置 channels.dingtalk</li>
+<li>QQ：使用 <code>openclaw config set</code> 命令配置 channels.qqbot</li>
+<li>企业微信：使用 <code>openclaw config set</code> 命令配置 channels.wxwork</li>
+</ul>
+</blockquote>
+<h3 id="C-推荐资源"><a href="#C-推荐资源" class="headerlink" title="C. 推荐资源"></a>C. 推荐资源</h3><p><strong>官方文档</strong>：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://docs.openclaw.ai/">OpenClaw 官方文档</a></li>
+<li><a target="_blank" rel="noopener" href="https://openclawcn.com/en/docs/">OpenClaw 中文文档</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.openclaw.ai/install/docker">Docker 安装指南</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.openclaw.ai/gateway/security">Gateway 安全配置</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.openclaw.ai/channels">渠道配置文档</a></li>
+</ul>
+<p><strong>社区资源</strong>：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/openclaw/openclaw">GitHub 仓库</a></li>
+<li><a target="_blank" rel="noopener" href="https://discord.gg/openclaw">Discord 社区</a></li>
+<li><a target="_blank" rel="noopener" href="https://open.feishu.cn/">飞书群组</a></li>
+</ul>
+<p><strong>快速链接</strong>：</p>
+<ul>
+<li>Docker 镜像：<code>ghcr.io/openclaw/openclaw</code></li>
+<li>控制面板：<code>http://localhost:18789</code></li>
+<li>健康检查：<code>http://localhost:18789/healthz</code></li>
+</ul>
+<hr>
+<p>本教程涵盖 OpenClaw Docker 部署的完整流程，从环境准备到生产环境配置。如有问题，请参考官方文档或加入社区获取帮助。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://Memvia.github.io/">Memvia</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://memvia.github.io/posts/openclaw-docker-deploy/">https://memvia.github.io/posts/openclaw-docker-deploy/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://Memvia.github.io" target="_blank">Memvia's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Docker/">Docker</a><a class="post-meta__tags" href="/tags/AI/">AI</a><a class="post-meta__tags" href="/tags/%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B/">部署教程</a><a class="post-meta__tags" href="/tags/OpenClaw/">OpenClaw</a></div><div class="post-share"><div class="social-share" data-image="https://i.mituw.com/imgs/2026/02/07/423c193cd50787d4.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/posts/6e5b24ae/" title="为我所用 - 高级成长者的生命操作系统"><img class="cover" src="https://i.mituw.com/imgs/2026/02/07/423c193cd50787d4.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">为我所用 - 高级成长者的生命操作系统</div></div><div class="info-2"><div class="info-item-1">深度解析「为我所用」的哲学内涵、先决条件与实践方法，构建以自我为核心的生命操作系统</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Memvia</div><div class="author-info-description">现代C++程序语言学习 | 笔记</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">11</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">25</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">18</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Memvia"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/Memvia" target="_blank" title="Github"><i class="fab fa-github" style="color: #23282d;"></i></a><a class="social-icon" href="https://space.bilibili.com/" target="_blank" title="bilibili"><i class="fab fa-bilibili" style="color: #01affd;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content"><style>
+.announcement-card {
+    --main-color: #404068;
+    --secondary-color: #5d89a4;
+    position: relative;
+    overflow: hidden;
+}
+.announcement-content {
+    font-size: 1rem; 
+    line-height: 1.2; 
+    color: #ffffff;
+    position: relative;
+}
+.highlight {
+    color: var(--main-color);
+    font-weight: 1000;
+    font-size: 1.2rem; 
+}
+.announcement-content ul {
+    list-style-type: none;
+    margin: 0.8rem 0; 
+    padding-left: 1.5rem;   
+}
+</style>
+<div class="announcement-card">
+    <div class="announcement-content">
+        <p><span class="highlight">欢迎来到「行尘」的博客</span>！</p>
+        <p><strong>步履匆匆，寻觅半生</strong></p>
+    </div>
+</div>
+</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#OpenClaw-Docker-%E5%AE%B9%E5%99%A8%E5%8C%96%E9%83%A8%E7%BD%B2%E5%AE%8C%E5%85%A8%E6%8C%87%E5%8D%97"><span class="toc-number">1.</span> <span class="toc-text">OpenClaw Docker 容器化部署完全指南</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86%EF%BC%9A%E6%A6%82%E5%BF%B5%E7%90%86%E8%A7%A3"><span class="toc-number">1.1.</span> <span class="toc-text">第一部分：概念理解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E4%BB%80%E4%B9%88%E6%98%AF-OpenClaw%EF%BC%9F"><span class="toc-number">1.1.1.</span> <span class="toc-text">1.1 什么是 OpenClaw？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E6%A0%B8%E5%BF%83%E6%9E%B6%E6%9E%84"><span class="toc-number">1.1.2.</span> <span class="toc-text">1.2 核心架构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-%E4%B8%BA%E4%BB%80%E4%B9%88%E9%80%89%E6%8B%A9-Docker-%E9%83%A8%E7%BD%B2%EF%BC%9F"><span class="toc-number">1.1.3.</span> <span class="toc-text">1.3 为什么选择 Docker 部署？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E9%83%A8%E5%88%86%EF%BC%9A%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87"><span class="toc-number">1.2.</span> <span class="toc-text">第二部分：环境准备</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%80%89%E6%8B%A9"><span class="toc-number">1.2.1.</span> <span class="toc-text">2.1 服务器选择</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-Docker-%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85"><span class="toc-number">1.2.2.</span> <span class="toc-text">2.2 Docker 环境安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-%E5%9B%BD%E5%86%85%E9%95%9C%E5%83%8F%E9%85%8D%E7%BD%AE"><span class="toc-number">1.2.3.</span> <span class="toc-text">2.3 国内镜像配置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E9%83%A8%E5%88%86%EF%BC%9A%E6%A0%B8%E5%BF%83%E9%83%A8%E7%BD%B2"><span class="toc-number">1.3.</span> <span class="toc-text">第三部分：核心部署</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84"><span class="toc-number">1.3.1.</span> <span class="toc-text">3.1 目录结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-number">1.3.2.</span> <span class="toc-text">3.2 配置文件</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#env-%E6%96%87%E4%BB%B6"><span class="toc-number">1.3.2.1.</span> <span class="toc-text">.env 文件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#docker-compose-yml"><span class="toc-number">1.3.2.2.</span> <span class="toc-text">docker-compose.yml</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E8%AF%A6%E8%A7%A3"><span class="toc-number">1.3.3.</span> <span class="toc-text">3.3 环境变量详解</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-%E9%A6%96%E6%AC%A1%E5%90%AF%E5%8A%A8"><span class="toc-number">1.3.4.</span> <span class="toc-text">3.4 首次启动</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-5-%E9%AA%8C%E8%AF%81%E9%83%A8%E7%BD%B2"><span class="toc-number">1.3.5.</span> <span class="toc-text">3.5 验证部署</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%EF%BC%9A%E5%85%A8%E5%B9%B3%E5%8F%B0%E9%85%8D%E7%BD%AE"><span class="toc-number">1.4.</span> <span class="toc-text">第四部分：全平台配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E6%B6%88%E6%81%AF%E5%B9%B3%E5%8F%B0%E6%A6%82%E8%A7%88"><span class="toc-number">1.4.1.</span> <span class="toc-text">4.1 消息平台概览</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-Telegram-%E9%85%8D%E7%BD%AE%EF%BC%88%E6%9C%80%E7%AE%80%E5%8D%95%E7%9A%84%E5%85%A5%E9%97%A8%E6%B8%A0%E9%81%93%EF%BC%89"><span class="toc-number">1.4.2.</span> <span class="toc-text">4.2 Telegram 配置（最简单的入门渠道）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-Discord-%E9%85%8D%E7%BD%AE"><span class="toc-number">1.4.3.</span> <span class="toc-text">4.3 Discord 配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-4-WhatsApp-%E9%85%8D%E7%BD%AE"><span class="toc-number">1.4.4.</span> <span class="toc-text">4.4 WhatsApp 配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-5-%E9%A3%9E%E4%B9%A6%E9%85%8D%E7%BD%AE%EF%BC%88%E5%9B%BD%E5%86%85%E9%87%8D%E7%82%B9%EF%BC%89"><span class="toc-number">1.4.5.</span> <span class="toc-text">4.5 飞书配置（国内重点）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-6-%E9%92%89%E9%92%89%E9%85%8D%E7%BD%AE%EF%BC%88%E5%9B%BD%E5%86%85%E9%87%8D%E7%82%B9%EF%BC%89"><span class="toc-number">1.4.6.</span> <span class="toc-text">4.6 钉钉配置（国内重点）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-7-QQ-%E6%9C%BA%E5%99%A8%E4%BA%BA%E9%85%8D%E7%BD%AE%EF%BC%88%E5%9B%BD%E5%86%85%E9%87%8D%E7%82%B9%EF%BC%89"><span class="toc-number">1.4.7.</span> <span class="toc-text">4.7 QQ 机器人配置（国内重点）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-8-%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1%E9%85%8D%E7%BD%AE"><span class="toc-number">1.4.8.</span> <span class="toc-text">4.8 企业微信配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-9-%E5%A4%9A%E5%B9%B3%E5%8F%B0%E5%90%8C%E6%97%B6%E8%BF%90%E8%A1%8C"><span class="toc-number">1.4.9.</span> <span class="toc-text">4.9 多平台同时运行</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%94%E9%83%A8%E5%88%86%EF%BC%9AAI-%E6%A8%A1%E5%9E%8B%E9%85%8D%E7%BD%AE"><span class="toc-number">1.5.</span> <span class="toc-text">第五部分：AI 模型配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-%E6%94%AF%E6%8C%81%E7%9A%84%E6%A8%A1%E5%9E%8B%E6%8F%90%E4%BE%9B%E5%95%86"><span class="toc-number">1.5.1.</span> <span class="toc-text">5.1 支持的模型提供商</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-OpenAI-%E9%85%8D%E7%BD%AE"><span class="toc-number">1.5.2.</span> <span class="toc-text">5.2 OpenAI 配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-Claude-%E9%85%8D%E7%BD%AE"><span class="toc-number">1.5.3.</span> <span class="toc-text">5.3 Claude 配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-4-%E5%9B%BD%E5%86%85%E6%A8%A1%E5%9E%8B%E9%85%8D%E7%BD%AE"><span class="toc-number">1.5.4.</span> <span class="toc-text">5.4 国内模型配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-5-Ollama-%E6%9C%AC%E5%9C%B0%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.5.5.</span> <span class="toc-text">5.5 Ollama 本地模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-6-%E6%A8%A1%E5%9E%8B%E6%95%85%E9%9A%9C%E8%BD%AC%E7%A7%BB"><span class="toc-number">1.5.6.</span> <span class="toc-text">5.6 模型故障转移</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E5%85%AD%E9%83%A8%E5%88%86%EF%BC%9A%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA"><span class="toc-number">1.6.</span> <span class="toc-text">第六部分：安全加固</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-%E8%AE%A4%E8%AF%81%E9%85%8D%E7%BD%AE"><span class="toc-number">1.6.1.</span> <span class="toc-text">6.1 认证配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-%E7%BD%91%E7%BB%9C%E9%9A%94%E7%A6%BB"><span class="toc-number">1.6.2.</span> <span class="toc-text">6.2 网络隔离</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-3-%E6%B2%99%E7%AE%B1%E9%9A%94%E7%A6%BB"><span class="toc-number">1.6.3.</span> <span class="toc-text">6.3 沙箱隔离</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-4-%E5%B7%A5%E5%85%B7%E7%AD%96%E7%95%A5"><span class="toc-number">1.6.4.</span> <span class="toc-text">6.4 工具策略</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-5-%E5%AE%89%E5%85%A8%E5%AE%A1%E8%AE%A1"><span class="toc-number">1.6.5.</span> <span class="toc-text">6.5 安全审计</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%83%E9%83%A8%E5%88%86%EF%BC%9A%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83"><span class="toc-number">1.7.</span> <span class="toc-text">第七部分：生产环境</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#7-1-Nginx-%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86"><span class="toc-number">1.7.1.</span> <span class="toc-text">7.1 Nginx 反向代理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-2-HTTPS-%E9%85%8D%E7%BD%AE"><span class="toc-number">1.7.2.</span> <span class="toc-text">7.2 HTTPS 配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-3-%E5%81%A5%E5%BA%B7%E6%A3%80%E6%9F%A5"><span class="toc-number">1.7.3.</span> <span class="toc-text">7.3 健康检查</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-4-%E6%97%A5%E5%BF%97%E7%AE%A1%E7%90%86"><span class="toc-number">1.7.4.</span> <span class="toc-text">7.4 日志管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-5-%E5%A4%87%E4%BB%BD%E4%B8%8E%E6%81%A2%E5%A4%8D"><span class="toc-number">1.7.5.</span> <span class="toc-text">7.5 备份与恢复</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-6-%E7%89%88%E6%9C%AC%E5%8D%87%E7%BA%A7"><span class="toc-number">1.7.6.</span> <span class="toc-text">7.6 版本升级</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E5%85%AB%E9%83%A8%E5%88%86%EF%BC%9A%E8%BF%90%E7%BB%B4%E4%B8%8E%E6%95%85%E9%9A%9C%E6%8E%92%E6%9F%A5"><span class="toc-number">1.8.</span> <span class="toc-text">第八部分：运维与故障排查</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#8-1-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-number">1.8.1.</span> <span class="toc-text">8.1 常用命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-2-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98"><span class="toc-number">1.8.2.</span> <span class="toc-text">8.2 常见问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-3-%E8%AF%8A%E6%96%AD%E5%B7%A5%E5%85%B7"><span class="toc-number">1.8.3.</span> <span class="toc-text">8.3 诊断工具</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%99%84%E5%BD%95"><span class="toc-number">1.9.</span> <span class="toc-text">附录</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#A-%E5%AE%8C%E6%95%B4%E9%85%8D%E7%BD%AE%E7%A4%BA%E4%BE%8B"><span class="toc-number">1.9.1.</span> <span class="toc-text">A. 完整配置示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#B-%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E9%80%9F%E6%9F%A5%E8%A1%A8"><span class="toc-number">1.9.2.</span> <span class="toc-text">B. 环境变量速查表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#C-%E6%8E%A8%E8%8D%90%E8%B5%84%E6%BA%90"><span class="toc-number">1.9.3.</span> <span class="toc-text">C. 推荐资源</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/openclaw-docker-deploy/" title="OpenClaw Docker 容器化部署完全指南"><img src="https://i.mituw.com/imgs/2026/02/07/423c193cd50787d4.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="OpenClaw Docker 容器化部署完全指南"/></a><div class="content"><a class="title" href="/posts/openclaw-docker-deploy/" title="OpenClaw Docker 容器化部署完全指南">OpenClaw Docker 容器化部署完全指南</a><time datetime="2026-03-07T14:00:00.000Z" title="发表于 2026-03-07 14:00:00">2026-03-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/6e5b24ae/" title="为我所用 - 高级成长者的生命操作系统"><img src="https://i.mituw.com/imgs/2026/02/07/423c193cd50787d4.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="为我所用 - 高级成长者的生命操作系统"/></a><div class="content"><a class="title" href="/posts/6e5b24ae/" title="为我所用 - 高级成长者的生命操作系统">为我所用 - 高级成长者的生命操作系统</a><time datetime="2026-03-03T10:00:00.000Z" title="发表于 2026-03-03 10:00:00">2026-03-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/raii-resource-acquisition-is-initialization/" title="RAII - 资源获取即初始化"><img src="https://i.mituw.com/imgs/2026/02/07/423c193cd50787d4.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="RAII - 资源获取即初始化"/></a><div class="content"><a class="title" href="/posts/raii-resource-acquisition-is-initialization/" title="RAII - 资源获取即初始化">RAII - 资源获取即初始化</a><time datetime="2026-02-09T00:00:00.000Z" title="发表于 2026-02-09 00:00:00">2026-02-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/stl-containers/" title="容器 - STL 容器全面指南"><img src="https://i.mituw.com/imgs/2026/02/07/423c193cd50787d4.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="容器 - STL 容器全面指南"/></a><div class="content"><a class="title" href="/posts/stl-containers/" title="容器 - STL 容器全面指南">容器 - STL 容器全面指南</a><time datetime="2026-02-09T00:00:00.000Z" title="发表于 2026-02-09 00:00:00">2026-02-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/smart-pointers/" title="智能指针 - 现代 C++ 内存管理"><img src="https://i.mituw.com/imgs/2026/02/07/423c193cd50787d4.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="智能指针 - 现代 C++ 内存管理"/></a><div class="content"><a class="title" href="/posts/smart-pointers/" title="智能指针 - 现代 C++ 内存管理">智能指针 - 现代 C++ 内存管理</a><time datetime="2026-02-09T00:00:00.000Z" title="发表于 2026-02-09 00:00:00">2026-02-09</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2026 By Memvia</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.3</a></span></div><div class="footer_custom_text"><style>
+  .footer {
+    text-align: center;
+    position: relative;
+  }
+  .footer p {
+    margin: 0.5rem 0;
+    line-height: 1;
+  }
+  .tagline {
+    font-size: 0.8rem;
+    color: #8bd7f1;
+    font-style: italic;
+    font-weight: 500;
+  }
+</style>
+<div class="footer">
+  <p class="tagline">> 绘学识为光，赴无明之渊；照见行路，不照归处。 <</p>
+</div>
+</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.3"></script><script src="/js/main.js?v=5.5.3"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><div class="js-pjax"><script>(() => {
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const config = mermaidSrc.dataset.config ? JSON.parse(mermaidSrc.dataset.config) : {}
+      if (!config.theme) {
+        config.theme = theme
+      }
+      const mermaidThemeConfig = `%%{init: ${JSON.stringify(config)}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      // mermaid v9 and v10 compatibility
+      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (false) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid@11.12.2/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script src="/js/jquery.min.js"></script><script src="/js/footer.js" defer data-pjax></script><div id="aplayer" class="aplayer no-destroy"></div><script src="/js/aplayer.js" defer data-pjax></script><script id="canvas_nest" defer="defer" color="139,215,241" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/dist/canvas-nest.min.js"></script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/dist/click-heart.min.js" async="async" mobile="false"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/metingjs/dist/Meting.min.js"></script><script>(() => {
+  const destroyAplayer = () => {
+    if (window.aplayers) {
+      for (let i = 0; i < window.aplayers.length; i++) {
+        if (!window.aplayers[i].options.fixed) {
+          window.aplayers[i].destroy()
+        }
+      }
+    }
+  }
+
+  const runMetingJS = () => {
+    typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+  }
+
+  btf.addGlobalFn('pjaxSend', destroyAplayer, 'destroyAplayer')
+  btf.addGlobalFn('pjaxComplete', loadMeting, 'runMetingJS')
+})()</script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="行尘之中，见微光" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.3"></script></div></div><!-- hexo injector body_end start --><script data-pjax>
+  function butterfly_swiper_injector_config(){
+    var parent_div_git = document.getElementById('recent-posts');
+    var item_html = '<div class="recent-post-item" style="height: auto;width: 100%"><div class="blog-slider swiper-container-fade swiper-container-horizontal" id="swiper_container"><div class="blog-slider__wrp swiper-wrapper" style="transition-duration: 0ms;"><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" onclick="pjax.loadUrl(&quot;posts/modern-cpp-index/&quot;);" href="javascript:void(0);" alt=""><img width="48" height="48" src="https://i.mituw.com/imgs/2026/02/07/423c193cd50787d4.png" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2026-02-09</span><a class="blog-slider__title" onclick="pjax.loadUrl(&quot;posts/modern-cpp-index/&quot;);" href="javascript:void(0);" alt="">现代 C++ 编程语言 - 系列索引</a><div class="blog-slider__text">现代 C++ 编程语言系统性学习系列文章的完整索引和学习路线图</div><a class="blog-slider__button" onclick="pjax.loadUrl(&quot;posts/modern-cpp-index/&quot;);" href="javascript:void(0);" alt="">详情       </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" onclick="pjax.loadUrl(&quot;posts/305bae84/&quot;);" href="javascript:void(0);" alt=""><img width="48" height="48" src="https://i.mituw.com/imgs/2026/02/07/423c193cd50787d4.png" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2026-01-27</span><a class="blog-slider__title" onclick="pjax.loadUrl(&quot;posts/305bae84/&quot;);" href="javascript:void(0);" alt="">Butterfly主题美化</a><div class="blog-slider__text">一些优秀的美化教程参考</div><a class="blog-slider__button" onclick="pjax.loadUrl(&quot;posts/305bae84/&quot;);" href="javascript:void(0);" alt="">详情       </a></div></div></div><div class="blog-slider__pagination swiper-pagination-clickable swiper-pagination-bullets"></div></div></div>';
+    console.log('已挂载butterfly_swiper')
+    parent_div_git.insertAdjacentHTML("afterbegin",item_html)
+    }
+  var elist = 'undefined'.split(',');
+  var cpage = location.pathname;
+  var epage = '/';
+  var flag = 0;
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    butterfly_swiper_injector_config();
+  }
+  else if (epage === cpage){
+    butterfly_swiper_injector_config();
+  }
+  </script><script defer src="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.js"></script><script defer data-pjax src="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper_init.js"></script><!-- hexo injector body_end end --></body></html>
