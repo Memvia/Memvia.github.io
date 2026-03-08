@@ -39,6 +39,7 @@
 
 #aside_content .card-widget, 
 #recent-posts > .recent-post-item, 
+#recent-posts > .recent-post-items > .recent-post-item,
 .layout_page > div:first-child:not(.recent-posts), 
 .layout_post > #page, 
 .layout_post > #post, 
@@ -47,7 +48,8 @@
 #aside-content > .sticky_layout > .card-widget,
 .layout > #post,
 .layout > #page,
-.layout > #archive {
+.layout > #archive,
+#content-inner {
   background: var(--glass-bg-light);
   backdrop-filter: blur(var(--glass-blur)) saturate(200%);
   -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(200%);
@@ -62,6 +64,7 @@
 /* 添加光泽效果 */
 #aside_content .card-widget::before,
 #recent-posts > .recent-post-item::before,
+#recent-posts > .recent-post-items > .recent-post-item::before,
 #aside-content > .card-widget::before,
 #aside-content > .sticky_layout > .card-widget::before,
 .layout > #post::before,
@@ -85,6 +88,7 @@
 
 #aside_content .card-widget:hover::before,
 #recent-posts > .recent-post-item:hover::before,
+#recent-posts > .recent-post-items > .recent-post-item:hover::before,
 #aside-content > .card-widget:hover::before,
 #aside-content > .sticky_layout > .card-widget:hover::before,
 .layout > #post:hover::before,
@@ -96,6 +100,7 @@
 /* 夜间模式 */
 [data-theme="dark"] #aside_content .card-widget,
 [data-theme="dark"] #recent-posts > .recent-post-item,
+[data-theme="dark"] #recent-posts > .recent-post-items > .recent-post-item,
 [data-theme="dark"] .layout_page > div:first-child:not(.recent-posts),
 [data-theme="dark"] .layout_post > #page,
 [data-theme="dark"] .layout_post > #post,
